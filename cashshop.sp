@@ -1,4 +1,5 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <AutoExecConfig>
@@ -6,7 +7,8 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#pragma newdecls required
+#define prefix "[SM] "
+#define nomoney "You don't have enough money!"
 
 public Plugin myinfo = 
 {
@@ -48,10 +50,10 @@ public void OnPluginStart()
 	SmokePrice = AutoExecConfig_CreateConVar("sm_cashshop_price_smokegrenade",                "5000", "Price of Smoke Grenade");
 	DecoyPrice = AutoExecConfig_CreateConVar("sm_cashshop_price_decoy",                       "5000", "Price of Decoy Grenade");
 	TactAwarePrice = AutoExecConfig_CreateConVar("sm_cashshop_price_tacticalawareness",       "5000", "Price of Tactical Awareness Grenade");
+	SnowballPrice = AutoExecConfig_CreateConVar("sm_cashshop_price_snoball",                  "100", "Price of Snowball");
 	HEPrice = AutoExecConfig_CreateConVar("sm_cashshop_price_hegrenade",                      "8000", "Price of HE Grenade");
 	MolotovPrice = AutoExecConfig_CreateConVar("sm_cashshop_price_molotov",                   "8000", "Price of Molotov");
 	BreachChargePrice = AutoExecConfig_CreateConVar("sm_cashshop_price_breachcharge",         "12000", "Price of Breach Charge");
-	SnowballPrice = AutoExecConfig_CreateConVar("sm_cashshop_price_snoball",                  "100", "Price of Snowball");
 	GlockPrice = AutoExecConfig_CreateConVar("sm_cashshop_price_glock",                       "16000", "Price of Glock");
 	CZ75Price = AutoExecConfig_CreateConVar("sm_cashshop_price_cz75a",                        "18000", "Price of CZ75A");
 	DeaglePrice = AutoExecConfig_CreateConVar("sm_cashshop_price_deagle",                     "20000", "Price of Deagle");
@@ -89,9 +91,9 @@ public Action Command_CashShop(int client, int args)
 	{
 		Menu menu = new Menu(Menu_CTShop);
 		menu.SetTitle("Cash Shop");
-		menu.AddItem("tactnades", "Tactical Grenade");
-		menu.AddItem("harmor", "Heavy Armor");
-		menu.AddItem("offnade", "Offensive Utility");
+		menu.AddItem("tactnades",    "Tactical Grenade");
+		menu.AddItem("offnade",      "Offensive Utility");
+		menu.AddItem("harmor",       "Heavy Armor");
 		menu.Display(client, MENU_TIME_FOREVER);
 		return Plugin_Handled;
 		
@@ -100,9 +102,9 @@ public Action Command_CashShop(int client, int args)
 	{
 		Menu menu = new Menu(Menu_TShop);
 		menu.SetTitle("Cash Shop");
-		menu.AddItem("tactnades", "Tactical Grenades");
-		menu.AddItem("armor", "Body Armor");
-		menu.AddItem("pistols", "Pistols");
+		menu.AddItem("tactnades",   "Tactical Grenades");
+		menu.AddItem("pistols",     "Pistols");
+		menu.AddItem("armor",       "Body Armor");
 		menu.Display(client, MENU_TIME_FOREVER);
 		return Plugin_Handled;
 	}
@@ -123,8 +125,8 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.AddItem("weapon_smokegrenade",    "($5000)Smoke Grenade");
 			tgmenu.AddItem("weapon_decoy",           "($5000)Decoy Grenade");
 			tgmenu.AddItem("weapon_tagrenade",       "($5000)Tactical Awareness Grenade");
+			tgmenu.AddItem("weapon_snowball",        "($100)Snowball");
 			tgmenu.Display(client, MENU_TIME_FOREVER);
-			menu.ExitBackButton = true;
 		}
 		else if (StrEqual(info, "offnade"))
 		{
@@ -133,20 +135,17 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.AddItem("weapon_hegrenade",       "($8000)HE Grenade");
 			tgmenu.AddItem("weapon_molotov",         "($8000)Molotov");
 			tgmenu.AddItem("weapon_breachcharge",    "($12000)Breach Charge");
-			tgmenu.AddItem("weapon_snowball",        "($100)Snowball");
 			tgmenu.Display(client, MENU_TIME_FOREVER);
-			menu.ExitBackButton = true;
 		}
 		else if (StrEqual(info, "harmor"))
 		{
 			Menu tgmenu = new Menu(Menu_HeavyArmor);
 			tgmenu.SetTitle("Heavy Armor");
-			tgmenu.AddItem("h1",                     "($10000)Add 10 Heavy Armor");
-			tgmenu.AddItem("h2",                     "($12000)Add 15 Heavy Armor");
-			tgmenu.AddItem("h3",                     "($14000)Add 20 Heavy Armor");
-			tgmenu.AddItem("h4",                     "($16000)Add 25 Heavy Armor");
+			tgmenu.AddItem("h1",                     "($10000)Get 10 Heavy Armor");
+			tgmenu.AddItem("h2",                     "($12000)Get 15 Heavy Armor");
+			tgmenu.AddItem("h3",                     "($14000)Get 20 Heavy Armor");
+			tgmenu.AddItem("h4",                     "($16000)Get 25 Heavy Armor");
 			tgmenu.Display(client, MENU_TIME_FOREVER);
-			menu.ExitBackButton = true;
 		}
 	}
 	else if (action == MenuAction_End)
@@ -168,30 +167,28 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.AddItem("weapon_smokegrenade",    "($5000)Smoke Grenade");
 			tgmenu.AddItem("weapon_decoy",           "($5000)Decoy Grenade");
 			tgmenu.AddItem("weapon_tagrenade",       "($5000)Tactical Awareness Grenade");
+			tgmenu.AddItem("weapon_snowball",        "($100)Snowball");
 			tgmenu.Display(client, MENU_TIME_FOREVER);
-			menu.ExitBackButton = true;
 		}
 		else if (StrEqual(info, "armor"))
 		{
 			Menu tgmenu = new Menu(Menu_BodyArmor);
 			tgmenu.SetTitle("Armor");
-			tgmenu.AddItem("ba1",                   "($4000)Add 10 Body Armor");
-			tgmenu.AddItem("ba2",                   "($5200)Add 15 Body Armor");
-			tgmenu.AddItem("ba3",                   "($6400)Add 20 Body Armor");
-			tgmenu.AddItem("ba4",                   "($7600)Add 25 Body Armor");
+			tgmenu.AddItem("ba1",                    "($4000)Add 10 Body Armor");
+			tgmenu.AddItem("ba2",                    "($5200)Add 15 Body Armor");
+			tgmenu.AddItem("ba3",                    "($6400)Add 20 Body Armor");
+			tgmenu.AddItem("ba4",                    "($7600)Add 25 Body Armor");
 			tgmenu.Display(client, MENU_TIME_FOREVER);
-			menu.ExitBackButton = true;
 		}
 		else if(StrEqual(info, "pistols"))
 		{
 			Menu tgmenu = new Menu(Menu_Pistols);
 			tgmenu.SetTitle("Pistols");
-			tgmenu.AddItem("weapon_glock",          "($16000)Glock");
-			tgmenu.AddItem("weapon_cz75a",          "($18000)CZ75A");
-			tgmenu.AddItem("weapon_deagle",         "($20000)Deagle");
-			tgmenu.AddItem("weapon_revolver",       "($20000)BumpyBumpy");
+			tgmenu.AddItem("weapon_glock",           "($16000)Glock");
+			tgmenu.AddItem("weapon_cz75a",           "($18000)CZ75A");
+			tgmenu.AddItem("weapon_deagle",          "($20000)Deagle");
+			tgmenu.AddItem("weapon_revolver",        "($20000)BumpyBumpy");
 			tgmenu.Display(client, MENU_TIME_FOREVER);
-			menu.ExitBackButton = true;
 		}
 	}
 	else if (action == MenuAction_End)
@@ -215,12 +212,18 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				p.Money -= FlashbangPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_flashbang");
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "weapon_smokegrenade"))
 		{
 			if(p.Money >= SmokePrice.IntValue){
 				p.Money -= SmokePrice.IntValue;
 				GivePlayerWeapon(p, "weapon_smokegrenade");
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 		else if (StrEqual(info, "weapon_decoy"))
@@ -229,12 +232,28 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				p.Money -= DecoyPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_decoy");
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "weapon_tagrenade"))
 		{
 			if(p.Money >= TactAwarePrice.IntValue){
 				p.Money -= TactAwarePrice.IntValue;
 				GivePlayerWeapon(p, "weapon_tagrenade");
+			}
+			else{
+				PrintToChat(client, nomoney);
+			}
+		}
+		else if (StrEqual(info, "weapon_snowball"))
+		{
+			if(p.Money >= SnowballPrice.IntValue){
+				p.Money -= SnowballPrice.IntValue;
+				GivePlayerWeapon(p, "weapon_snowball");
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 	}
@@ -259,12 +278,18 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				p.Money -= HEPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_hegrenade");
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "weapon_molotov"))
 		{
 			if(p.Money >= MolotovPrice.IntValue){
 				p.Money -= MolotovPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_molotov");
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 		else if (StrEqual(info, "weapon_breachcharge"))
@@ -273,12 +298,8 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				p.Money -= BreachChargePrice.IntValue;
 				GivePlayerWeapon(p, "weapon_breachcharge");
 			}
-		}
-		else if (StrEqual(info, "weapon_snowball"))
-		{
-			if(p.Money >= SnowballPrice.IntValue){
-				p.Money -= SnowballPrice.IntValue;
-				GivePlayerWeapon(p, "weapon_snowball");
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 	}
@@ -311,6 +332,9 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 				p.SetModel(sModel);
 				p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "h2"))
 		{
@@ -325,6 +349,9 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 				p.HeavyArmor = true;
 				p.SetModel(sModel);
 				p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 		else if (StrEqual(info, "h3"))
@@ -341,6 +368,9 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 				p.SetModel(sModel);
 				p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "h4"))
 		{
@@ -355,6 +385,9 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 				p.HeavyArmor = true;
 				p.SetModel(sModel);
 				p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 	}
@@ -381,6 +414,9 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 				p.Helmet = false;
 				p.HeavyArmor = false;
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "ba2"))
 		{
@@ -389,6 +425,9 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 				p.Armor += 15;
 				p.Helmet = false;
 				p.HeavyArmor = false;
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 		else if (StrEqual(info, "ba3"))
@@ -399,6 +438,9 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 				p.Helmet = false;
 				p.HeavyArmor = false;
 			}
+			else{
+				PrintToChat(client, nomoney);
+			}
 		}
 		else if (StrEqual(info, "ba4"))
 		{
@@ -407,6 +449,9 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 				p.Armor += 25;
 				p.Helmet = false;
 				p.HeavyArmor = false;
+			}
+			else{
+				PrintToChat(client, nomoney);
 			}
 		}
 	}
@@ -434,6 +479,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					gkwep.Ammo = 10;
 					gkwep.ReserveAmmo = 0;
 				}
+				else{
+					PrintToChat(client, nomoney);
+				}
 			}
 			else if (StrEqual(info, "weapon_cz75a"))
 			{
@@ -442,6 +490,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					CWeapon czwep = GivePlayerWeapon(p, "weapon_cz75a");
 					czwep.Ammo = 6;
 					czwep.ReserveAmmo = 0;
+				}
+				else{
+					PrintToChat(client, nomoney);
 				}
 			}
 			else if (StrEqual(info, "weapon_deagle"))
@@ -452,6 +503,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					dgwep.Ammo = 2;
 					dgwep.ReserveAmmo = 0;
 				}
+				else{
+					PrintToChat(client, nomoney);
+				}
 			}
 			else if (StrEqual(info, "weapon_revolver"))
 			{
@@ -460,6 +514,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					CWeapon r8wep = GivePlayerWeapon(p, "weapon_revolver");
 					r8wep.Ammo = 1;
 					r8wep.ReserveAmmo = 0;
+				}
+				else{
+					PrintToChat(client, nomoney);
 				}
 			}
 		}
