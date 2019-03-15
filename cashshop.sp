@@ -129,7 +129,7 @@ public void OnPluginStart()
 	HeavyArmor20Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor20",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor25Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor25",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Body Armor
-	BodyArmor10Toggle =				CreateConVar("sm_cashshop_toggle_armor10",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmor10Toggle =				CreateConVar("sm_cashshop_toggle_armor10",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor15Toggle =				CreateConVar("sm_cashshop_toggle_armor15",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor20Toggle =				CreateConVar("sm_cashshop_toggle_armor20",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor25Toggle =				CreateConVar("sm_cashshop_toggle_armor25",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -221,7 +221,7 @@ public Action Command_CashShop(int client, int args)
 		}
 	}
 	else{
-		PrintToChat(client, prefix..."uded");
+		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 	return Plugin_Handled;
 }
