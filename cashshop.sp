@@ -1,14 +1,20 @@
-#pragma semicolon 1
-#pragma newdecls required
 
 #include <sourcemod>
 #include <ccsplayer>
 #include <sdktools>
 #include <sdkhooks>
 
+#pragma semicolon 1
+#pragma newdecls required
+
 #define prefix "[SM] "
 #define nomoney "You don't have enough money!"
 #define disable "This is currently disabled!"
+#define SHOP_ITEM_DISABLED 0
+#define SHOP_ITEM_CT_ONLY 1
+#define SHOP_ITEM_T_ONLY 2
+#define SHOP_ITEM_ENABLED 3 
+
 
 public Plugin myinfo = 
 {
@@ -20,7 +26,7 @@ public Plugin myinfo =
 };
 
 
-char but[128];
+char displayprice[128];
 ConVar FlashbangToggle;
 ConVar SmokeToggle;
 ConVar DecoyToggle;
@@ -123,7 +129,7 @@ public void OnPluginStart()
 	HeavyArmor20Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor20",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor25Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor25",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Body Armor
-	BodyArmor10Toggle =				CreateConVar("sm_cashshop_toggle_armor2510",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmor10Toggle =				CreateConVar("sm_cashshop_toggle_armor10",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor15Toggle =				CreateConVar("sm_cashshop_toggle_armor15",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor20Toggle =				CreateConVar("sm_cashshop_toggle_armor20",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor25Toggle =				CreateConVar("sm_cashshop_toggle_armor25",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -158,60 +164,64 @@ public Action Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadca
 public Action Command_CashShop(int client, int args)
 {
 	CCSPlayer p = CCSPlayer(client);
-	//Check if player on CT
-	if (CS_TEAM_CT == p.Team)
-	{
-		//Check if Cash Shop is enabled
-		if(CashShopToggle.IntValue == 1 || CashShopToggle.IntValue == 3){
-			Menu menu = new Menu(Menu_CTShop);
-			menu.SetTitle("Cash Shop");
-			//Check if tacical grenade is enabled
-			if(TactNadesToggle.IntValue == 1 || TactNadesToggle.IntValue == 3){
-				menu.AddItem("tactnades",    "Tactical Grenade");
+	if(p.Alive){
+		//Check if player on CT
+		if (CS_TEAM_CT == p.Team)
+		{
+			//Check if Cash Shop is enabled
+			if(CashShopToggle.IntValue == SHOP_ITEM_CT_ONLY || CashShopToggle.IntValue == SHOP_ITEM_ENABLED){
+				Menu menu = new Menu(Menu_CTShop);
+				menu.SetTitle("Cash Shop");
+				//Check if tacical grenade is enabled
+				if(TactNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || TactNadesToggle.IntValue == SHOP_ITEM_ENABLED){
+					menu.AddItem("tactnades",    "Tactical Grenade");
+				}
+				//Check if offensive utility is enabled
+				if(OffNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || OffNadesToggle.IntValue == SHOP_ITEM_ENABLED){
+					menu.AddItem("offnade",      "Offensive Utility");
+				}
+				//Check if heavy armor is enabled
+				if(HeavyArmorToggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmorToggle.IntValue == SHOP_ITEM_ENABLED){
+					menu.AddItem("harmor",       "Heavy Armor");
+				}
+				menu.Display(client, MENU_TIME_FOREVER);
+				return Plugin_Handled;
 			}
-			//Check if offensive utility is enabled
-			if(OffNadesToggle.IntValue == 1 || OffNadesToggle.IntValue == 3){
-				menu.AddItem("offnade",      "Offensive Utility");
+			//Print if disabled
+			else{
+				PrintToChat(client, prefix...disable);
 			}
-			//Check if heavy armor is enabled
-			if(HeavyArmorToggle.IntValue == 1 || HeavyArmorToggle.IntValue == 3){
-				menu.AddItem("harmor",       "Heavy Armor");
-			}
-			menu.Display(client, MENU_TIME_FOREVER);
-			return Plugin_Handled;
 		}
-		//Print if disabled
-		else{
-			PrintToChat(client, prefix...disable);
+		//Check if player on T
+		else if(CS_TEAM_T == p.Team)
+		{
+			//Check if Cassh Shop is enabled
+			if(CashShopToggle.IntValue > SHOP_ITEM_CT_ONLY){
+				Menu menu = new Menu(Menu_TShop);
+				menu.SetTitle("Cash Shop");
+				//Check if tacical grenade is enabled
+				if(TactNadesToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					menu.AddItem("tactnades",    "Tactical Grenade");
+				}
+				//Check if pistol is enabled
+				if(PistolsToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					menu.AddItem("pistols",      "Pistols");
+				}
+				//Check if body armor is enabled
+				if(BodyArmorToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					menu.AddItem("barmor",       "Body Armor");
+				}
+				menu.Display(client, MENU_TIME_FOREVER);
+				return Plugin_Handled;
+			}
+			//Print if disabled
+			else{
+				PrintToChat(client, prefix...disable);
+			}
 		}
-		
 	}
-	//Check if player on T
-	else if(CS_TEAM_T == p.Team)
-	{
-		//Check if Cash Shop is enabled
-		if(CashShopToggle.IntValue >1){
-			Menu menu = new Menu(Menu_TShop);
-			menu.SetTitle("Cash Shop");
-			//Check if tacical grenade is enabled
-			if(TactNadesToggle.IntValue > 1){
-				menu.AddItem("tactnades",    "Tactical Grenade");
-			}
-			//Check if pistol is enabled
-			if(PistolsToggle.IntValue > 1){
-				menu.AddItem("pistols",      "Pistols");
-			}
-			//Check if body armor is enabled
-			if(BodyArmorToggle.IntValue > 1){
-				menu.AddItem("barmor",       "Body Armor");
-			}
-			menu.Display(client, MENU_TIME_FOREVER);
-			return Plugin_Handled;
-		}
-		//Print if disabled
-		else{
-			PrintToChat(client, prefix...disable);
-		}
+	else{
+		PrintToChat(client, prefix..."uded");
 	}
 	return Plugin_Handled;
 }
@@ -231,29 +241,29 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.SetTitle("Tactical Grenades");
 			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
 			//Check if flashbang is enabled 
-			if(FlashbangToggle.IntValue == 1 || FlashbangToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Flashbang", FlashbangPrice.IntValue);
-				tgmenu.AddItem("weapon_flashbang", but);
+			if(FlashbangToggle.IntValue == SHOP_ITEM_CT_ONLY || FlashbangToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Flashbang", FlashbangPrice.IntValue);
+				tgmenu.AddItem("weapon_flashbang", displayprice);
 			}
 			//Check if smoke grenade is enabled
-			if(SmokeToggle.IntValue == 1 || SmokeToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Smoke Grenade", SmokePrice.IntValue);
-				tgmenu.AddItem("weapon_smokegrenade", but);
+			if(SmokeToggle.IntValue == SHOP_ITEM_CT_ONLY || SmokeToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Smoke Grenade", SmokePrice.IntValue);
+				tgmenu.AddItem("weapon_smokegrenade", displayprice);
 			}
 			//Check if decoy is enabled
-			if(DecoyToggle.IntValue == 1 || DecoyToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Decoy Grenade", DecoyPrice.IntValue);
-				tgmenu.AddItem("weapon_decoy", but);
+			if(DecoyToggle.IntValue == SHOP_ITEM_CT_ONLY || DecoyToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Decoy Grenade", DecoyPrice.IntValue);
+				tgmenu.AddItem("weapon_decoy", displayprice);
 			}
 			//Check if tactical awareness is enabled
-			if(TactAwareToggle.IntValue == 1 || TactAwareToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
-				tgmenu.AddItem("weapon_tagrenade", but);
+			if(TactAwareToggle.IntValue == SHOP_ITEM_CT_ONLY || TactAwareToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
+				tgmenu.AddItem("weapon_tagrenade", displayprice);
 			}
 			//Check if snowball is enabled
-			if(SnowballToggle.IntValue == 1 || SnowballToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Snowball", SnowballPrice.IntValue);
-				tgmenu.AddItem("weapon_snowball", but);
+			if(SnowballToggle.IntValue == SHOP_ITEM_CT_ONLY || SnowballToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Snowball", SnowballPrice.IntValue);
+				tgmenu.AddItem("weapon_snowball", displayprice);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -264,19 +274,19 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.SetTitle("Offensive Utility");
 			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
 			//Check if hegrenade is enabled
-			if(HEToggle.IntValue == 1 || HEToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)HE Grenade", HEPrice.IntValue);
-				tgmenu.AddItem("weapon_hegrenade", but);
+			if(HEToggle.IntValue == SHOP_ITEM_CT_ONLY || HEToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)HE Grenade", HEPrice.IntValue);
+				tgmenu.AddItem("weapon_hegrenade", displayprice);
 			}
 			//Check if molotov is enabled 
-			if(MolotovToggle.IntValue == 1 || MolotovToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Molotov", MolotovPrice.IntValue);
-				tgmenu.AddItem("weapon_molotov", but);
+			if(MolotovToggle.IntValue == SHOP_ITEM_CT_ONLY || MolotovToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Molotov", MolotovPrice.IntValue);
+				tgmenu.AddItem("weapon_molotov", displayprice);
 			}
 			//Check if breach charge is enabled
-			if(BreachChargeToggle.IntValue == 1 || BreachChargeToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Breach Charge", BreachChargePrice.IntValue);
-				tgmenu.AddItem("weapon_breachcharge", but);
+			if(BreachChargeToggle.IntValue == SHOP_ITEM_CT_ONLY || BreachChargeToggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Breach Charge", BreachChargePrice.IntValue);
+				tgmenu.AddItem("weapon_breachcharge", displayprice);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -287,21 +297,21 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.SetTitle("Heavy Armor");
 			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
 			//Check if heavyarmor10 is enabled
-			if(HeavyArmor10Toggle.IntValue == 1 || HeavyArmor10Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 10 Heavy Armor", HeavyArmor10Price.IntValue);
-				tgmenu.AddItem("ha15", but);
+			if(HeavyArmor10Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor10Toggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 10 Heavy Armor", HeavyArmor10Price.IntValue);
+				tgmenu.AddItem("ha15", displayprice);
 			}
-			if(HeavyArmor15Toggle.IntValue == 1 || HeavyArmor15Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 15 Heavy Armor", HeavyArmor15Price.IntValue);
-				tgmenu.AddItem("ha15", but);
+			if(HeavyArmor15Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor15Toggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 15 Heavy Armor", HeavyArmor15Price.IntValue);
+				tgmenu.AddItem("ha15", displayprice);
 			}
-			if(HeavyArmor20Toggle.IntValue == 1 || HeavyArmor20Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 20 Heavy Armor", HeavyArmor20Price.IntValue);
-				tgmenu.AddItem("ha20", but);
+			if(HeavyArmor20Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor20Toggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 20 Heavy Armor", HeavyArmor20Price.IntValue);
+				tgmenu.AddItem("ha20", displayprice);
 			}
-			if(HeavyArmor25Toggle.IntValue == 1 || HeavyArmor25Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 25 Heavy Armor", HeavyArmor25Price.IntValue);
-				tgmenu.AddItem("ha25", but);
+			if(HeavyArmor25Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor25Toggle.IntValue == 3){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 25 Heavy Armor", HeavyArmor25Price.IntValue);
+				tgmenu.AddItem("ha25", displayprice);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -325,29 +335,29 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.SetTitle("Tactical Grenades");
 			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
 			//Check if flashbang is enabled
-			if(FlashbangToggle.IntValue == 2 || FlashbangToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Flashbang", FlashbangPrice.IntValue);
-				tgmenu.AddItem("weapon_flashbang", but);
+			if(FlashbangToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Flashbang", FlashbangPrice.IntValue);
+				tgmenu.AddItem("weapon_flashbang", displayprice);
 			}
 			//Check if smokegrenade is enabled
-			if(SmokeToggle.IntValue == 2 || SmokeToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Smoke Grenade", SmokePrice.IntValue);
-				tgmenu.AddItem("weapon_smokegrenade", but);
+			if(SmokeToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Smoke Grenade", SmokePrice.IntValue);
+				tgmenu.AddItem("weapon_smokegrenade", displayprice);
 			}
 			//Check if decoy is enabled
-			if(DecoyToggle.IntValue == 2 || DecoyToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Decoy Grenade", DecoyPrice.IntValue);
-				tgmenu.AddItem("weapon_decoy", but);
+			if(DecoyToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Decoy Grenade", DecoyPrice.IntValue);
+				tgmenu.AddItem("weapon_decoy", displayprice);
 			}
 			//Check if tactical awareness is enabled
-			if(TactAwareToggle.IntValue == 2 || TactAwareToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
-				tgmenu.AddItem("weapon_tagrenade", but);
+			if(TactAwareToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
+				tgmenu.AddItem("weapon_tagrenade", displayprice);
 			}
 			//Check if snowball is enabled
-			if(SnowballToggle.IntValue == 2 || SnowballToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Snowball", SnowballPrice.IntValue);
-				tgmenu.AddItem("weapon_snowball", but);
+			if(SnowballToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Snowball", SnowballPrice.IntValue);
+				tgmenu.AddItem("weapon_snowball", displayprice);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -358,21 +368,21 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.SetTitle("Armor");
 			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
 			//Check if bodyarmor is enabled
-			if(BodyArmor10Toggle.IntValue == 2 || BodyArmor10Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 10 Body Amor", BodyArmor10Price.IntValue);
-				tgmenu.AddItem("ba10", but);
+			if(BodyArmor10Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 10 Body Amor", BodyArmor10Price.IntValue);
+				tgmenu.AddItem("ba10", displayprice);
 			}
-			if(BodyArmor15Toggle.IntValue == 2 || BodyArmor15Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 15 Body Amor", BodyArmor15Price.IntValue);
-				tgmenu.AddItem("ba15", but);
+			if(BodyArmor15Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 15 Body Amor", BodyArmor15Price.IntValue);
+				tgmenu.AddItem("ba15", displayprice);
 			}
-			if(BodyArmor20Toggle.IntValue == 2 || BodyArmor20Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 20 Body Amor", BodyArmor20Price.IntValue);
-				tgmenu.AddItem("ba20", but);
+			if(BodyArmor20Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 20 Body Amor", BodyArmor20Price.IntValue);
+				tgmenu.AddItem("ba20", displayprice);
 			}
-			if(BodyArmor25Toggle.IntValue == 2 || BodyArmor25Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Add 25 Body Amor", BodyArmor25Price.IntValue);
-				tgmenu.AddItem("ba25", but);
+			if(BodyArmor25Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Add 25 Body Amor", BodyArmor25Price.IntValue);
+				tgmenu.AddItem("ba25", displayprice);
 			}
 			
 			tgmenu.Display(client, MENU_TIME_FOREVER);
@@ -384,24 +394,24 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 			tgmenu.SetTitle("Pistols");
 			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
 			//Check if glock is enabled
-			if(GlockToggle.IntValue == 2 || GlockToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Glock", GlockPrice.IntValue);
-				tgmenu.AddItem("weapon_glock", but);
+			if(GlockToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Glock", GlockPrice.IntValue);
+				tgmenu.AddItem("weapon_glock", displayprice);
 			}
 			//Check if cz75 is enabled
-			if(CZ75Toggle.IntValue == 2 || CZ75Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)CZ75A", CZ75Price.IntValue);
-				tgmenu.AddItem("weapon_cz75a", but);
+			if(CZ75Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)CZ75A", CZ75Price.IntValue);
+				tgmenu.AddItem("weapon_cz75a", displayprice);
 			}
 			//Check if deagle is enabled
-			if(DeagleToggle.IntValue == 2 || DeagleToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)Deagle", DeaglePrice.IntValue);
-				tgmenu.AddItem("weapon_deagle", but);
+			if(DeagleToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)Deagle", DeaglePrice.IntValue);
+				tgmenu.AddItem("weapon_deagle", displayprice);
 			}
 			//Check if revolver is enabled
-			if(BumpyToggle.IntValue == 2 || BumpyToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)BumpyBumpy", BumpyPrice.IntValue);
-				tgmenu.AddItem("weapon_revolver", but);
+			if(BumpyToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				Format(displayprice, sizeof(displayprice), "($%d)BumpyBumpy", BumpyPrice.IntValue);
+				tgmenu.AddItem("weapon_revolver", displayprice);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -477,7 +487,6 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
-	
 	}
 	else if (action == MenuAction_End)
 	{
