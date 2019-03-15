@@ -205,7 +205,7 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			}
 			if(DecoyToggle.IntValue == 1 || DecoyToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Decoy Grenade", DecoyPrice.IntValue);
-				tgmenu.AddItem("weapon_decoygrenade", but);
+				tgmenu.AddItem("weapon_decoy", but);
 			}
 			if(TactAwareToggle.IntValue == 1 || TactAwareToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
@@ -222,15 +222,15 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			Menu tgmenu = new Menu(Menu_OffNades);
 			tgmenu.SetTitle("Offensive Utility");
 			if(HEToggle.IntValue == 1 || HEToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", HEPrice.IntValue);
+				Format(but, sizeof(but), "($%d)HE Grenade", HEPrice.IntValue);
 				tgmenu.AddItem("weapon_hegrenade", but);
 			}
 			if(MolotovToggle.IntValue == 1 || MolotovToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", MolotovPrice.IntValue);
+				Format(but, sizeof(but), "($%d)Molotov", MolotovPrice.IntValue);
 				tgmenu.AddItem("weapon_molotov", but);
 			}
 			if(BreachChargeToggle.IntValue == 1 || BreachChargeToggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", BreachChargePrice.IntValue);
+				Format(but, sizeof(but), "($%d)Breach Charge", BreachChargePrice.IntValue);
 				tgmenu.AddItem("weapon_breachcharge", but);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
@@ -240,19 +240,19 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 			Menu tgmenu = new Menu(Menu_HeavyArmor);
 			tgmenu.SetTitle("Heavy Armor");
 			if(HeavyArmor10Toggle.IntValue == 1 || HeavyArmor10Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", HeavyArmor10Price.IntValue);
-				tgmenu.AddItem("ha10", but);
+				Format(but, sizeof(but), "($%d)Add 10 Heavy Armor", HeavyArmor10Price.IntValue);
+				tgmenu.AddItem("ha15", but);
 			}
 			if(HeavyArmor15Toggle.IntValue == 1 || HeavyArmor15Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", HeavyArmor15Price.IntValue);
+				Format(but, sizeof(but), "($%d)Add 15 Heavy Armor", HeavyArmor15Price.IntValue);
 				tgmenu.AddItem("ha15", but);
 			}
 			if(HeavyArmor20Toggle.IntValue == 1 || HeavyArmor20Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", HeavyArmor20Price.IntValue);
+				Format(but, sizeof(but), "($%d)Add 20 Heavy Armor", HeavyArmor20Price.IntValue);
 				tgmenu.AddItem("ha20", but);
 			}
 			if(HeavyArmor25Toggle.IntValue == 1 || HeavyArmor25Toggle.IntValue == 3){
-				Format(but, sizeof(but), "($%d)", HeavyArmor25Price.IntValue);
+				Format(but, sizeof(but), "($%d)Add 25 Heavy Armor", HeavyArmor25Price.IntValue);
 				tgmenu.AddItem("ha25", but);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
@@ -284,7 +284,7 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 			}
 			if(DecoyToggle.IntValue == 2 || DecoyToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Decoy Grenade", DecoyPrice.IntValue);
-				tgmenu.AddItem("weapon_decoygrenade", but);
+				tgmenu.AddItem("weapon_decoy", but);
 			}
 			if(TactAwareToggle.IntValue == 2 || TactAwareToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
