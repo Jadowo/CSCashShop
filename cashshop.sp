@@ -20,7 +20,7 @@ public Plugin myinfo =
 };
 
 
-
+char but[128];
 ConVar FlashbangToggle;
 ConVar SmokeToggle;
 ConVar DecoyToggle;
@@ -76,55 +76,65 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_cs", Command_CashShop);
 	HookEvent("round_end", Event_RoundEnd);
 	
+	//Tactical Grenade
 	FlashbangPrice =				CreateConVar("sm_cashshop_price_flashbang",				"5000",  "Price of Flashbang");
 	SmokePrice =					CreateConVar("sm_cashshop_price_smokegrenade",			"5000",  "Price of Smoke Grenade");
 	DecoyPrice =					CreateConVar("sm_cashshop_price_decoy",					"5000",  "Price of Decoy Grenade");
 	TactAwarePrice =				CreateConVar("sm_cashshop_price_tacticalawareness",		"5000",  "Price of Tactical Awareness Grenade");
 	SnowballPrice =					CreateConVar("sm_cashshop_price_snowball",				"100",   "Price of Snowball");
+	//Offensive Utility 
 	HEPrice =						CreateConVar("sm_cashshop_price_hegrenade",				"8000",  "Price of HE Grenade");
 	MolotovPrice =					CreateConVar("sm_cashshop_price_molotov",				"8000",  "Price of Molotov");
 	BreachChargePrice =				CreateConVar("sm_cashshop_price_breachcharge",			"12000", "Price of Breach Charge");
+	//Pistols
 	GlockPrice =					CreateConVar("sm_cashshop_price_glock",					"16000", "Price of Glock");
 	CZ75Price =						CreateConVar("sm_cashshop_price_cz75a",					"18000", "Price of CZ75A");
 	DeaglePrice =					CreateConVar("sm_cashshop_price_deagle",				"20000", "Price of Deagle");
 	BumpyPrice =					CreateConVar("sm_cashshop_price_revolver",				"20000", "Price of Revolver");
+	//Heavy Armor
 	HeavyArmor10Price =				CreateConVar("sm_cashshop_price_heavyarmor10",			"10000", "Price of Heavy Armor +10");
 	HeavyArmor15Price =				CreateConVar("sm_cashshop_price_heavyarmor15",			"12000", "Price of Heavy Armor +15");
 	HeavyArmor20Price =				CreateConVar("sm_cashshop_price_heavyarmor20",			"14000", "Price of Heavy Armor +20");
 	HeavyArmor25Price =				CreateConVar("sm_cashshop_price_heavyarmor25",			"16000", "Price of Heavy Armor +25");
+	//Body Armor
 	BodyArmor10Price =				CreateConVar("sm_cashshop_price_armor10",				"4000",  "Price of Armor +10");
 	BodyArmor15Price =				CreateConVar("sm_cashshop_price_armor15",				"5200",  "Price of Armor +15");
 	BodyArmor20Price =				CreateConVar("sm_cashshop_price_armor20",				"6400",  "Price of Armor +20");
 	BodyArmor25Price =				CreateConVar("sm_cashshop_price_armor25",				"7600",  "Price of Armor +25");
 	
-	
+	//Tactical Grenade
 	FlashbangToggle =				CreateConVar("sm_cashshop_toggle_flashbang",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	SmokeToggle =					CreateConVar("sm_cashshop_toggle_smoke",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	DecoyToggle =					CreateConVar("sm_cashshop_toggle_decoy",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	TactAwareToggle =				CreateConVar("sm_cashshop_toggle_tacticalawareness", 	"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	SnowballToggle =				CreateConVar("sm_cashshop_toggle_snowball",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	//Offensive Utility
 	HEToggle =						CreateConVar("sm_cashshop_toggle_hegrenade",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	MolotovToggle =					CreateConVar("sm_cashshop_toggle_molotov",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BreachChargeToggle =			CreateConVar("sm_cashshop_toggle_breachcharge",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	//Pistols
 	GlockToggle =					CreateConVar("sm_cashshop_toggle_glock",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	CZ75Toggle =					CreateConVar("sm_cashshop_toggle_cz75a",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	DeagleToggle =					CreateConVar("sm_cashshop_toggle_deagle",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BumpyToggle =					CreateConVar("sm_cashshop_toggle_revolver",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	//Heavy Armor
 	HeavyArmor10Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor10",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor15Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor15",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor20Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor20",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor25Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor25",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	//Body Armor
 	BodyArmor10Toggle =				CreateConVar("sm_cashshop_toggle_armor2510",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor15Toggle =				CreateConVar("sm_cashshop_toggle_armor15",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor20Toggle =				CreateConVar("sm_cashshop_toggle_armor20",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor25Toggle =				CreateConVar("sm_cashshop_toggle_armor25",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
+	//Menus
+	CashShopToggle =				CreateConVar("sm_cashshop_toggle_all",					"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	TactNadesToggle =				CreateConVar("sm_cashshop_toggle_tactnades",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	OffNadesToggle =				CreateConVar("sm_cashshop_toggle_offnades",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmorToggle =				CreateConVar("sm_cashshop_toggle_armor_heavy",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmorToggle =				CreateConVar("sm_cashshop_toggle_armor_body",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	PistolsToggle =					CreateConVar("sm_cashshop_toggle_pistols",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	CashShopToggle =				CreateConVar("sm_cashshop_toggle_all",					"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	
 	AutoExecConfig(true, "plugin.cashshop-jb");
@@ -137,6 +147,7 @@ public void OnMapStart() {
 }
 
 public Action Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadcast) {
+	// Removing Heavy Armor when round ends
 	for(CCSPlayer p = CCSPlayer(0); CCSPlayer.Next(p);) {
 		if(p.InGame && p.Team == CS_TEAM_CT) {
 			p.HeavyArmor = false;
@@ -147,98 +158,135 @@ public Action Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadca
 public Action Command_CashShop(int client, int args)
 {
 	CCSPlayer p = CCSPlayer(client);
+	//Check if player on CT
 	if (CS_TEAM_CT == p.Team)
 	{
+		//Check if Cash Shop is enabled
 		if(CashShopToggle.IntValue == 1 || CashShopToggle.IntValue == 3){
 			Menu menu = new Menu(Menu_CTShop);
 			menu.SetTitle("Cash Shop");
+			//Check if tacical grenade is enabled
 			if(TactNadesToggle.IntValue == 1 || TactNadesToggle.IntValue == 3){
 				menu.AddItem("tactnades",    "Tactical Grenade");
 			}
+			//Check if offensive utility is enabled
 			if(OffNadesToggle.IntValue == 1 || OffNadesToggle.IntValue == 3){
 				menu.AddItem("offnade",      "Offensive Utility");
 			}
+			//Check if heavy armor is enabled
 			if(HeavyArmorToggle.IntValue == 1 || HeavyArmorToggle.IntValue == 3){
 				menu.AddItem("harmor",       "Heavy Armor");
 			}
 			menu.Display(client, MENU_TIME_FOREVER);
 			return Plugin_Handled;
 		}
+		//Print if disabled
+		else{
+			PrintToChat(client, prefix...disable);
+		}
+		
 	}
+	//Check if player on T
 	else if(CS_TEAM_T == p.Team)
 	{
-		Menu menu = new Menu(Menu_TShop);
-		menu.SetTitle("Cash Shop");
-		if(TactNadesToggle.IntValue > 1){
-			menu.AddItem("tactnades",    "Tactical Grenade");
+		//Check if Cash Shop is enabled
+		if(CashShopToggle.IntValue >1){
+			Menu menu = new Menu(Menu_TShop);
+			menu.SetTitle("Cash Shop");
+			//Check if tacical grenade is enabled
+			if(TactNadesToggle.IntValue > 1){
+				menu.AddItem("tactnades",    "Tactical Grenade");
+			}
+			//Check if pistol is enabled
+			if(PistolsToggle.IntValue > 1){
+				menu.AddItem("pistols",      "Pistols");
+			}
+			//Check if body armor is enabled
+			if(BodyArmorToggle.IntValue > 1){
+				menu.AddItem("barmor",       "Body Armor");
+			}
+			menu.Display(client, MENU_TIME_FOREVER);
+			return Plugin_Handled;
 		}
-		if(PistolsToggle.IntValue > 1){
-			menu.AddItem("pistols",     "Pistols");
+		//Print if disabled
+		else{
+			PrintToChat(client, prefix...disable);
 		}
-		if(BodyArmorToggle.IntValue > 1){
-			menu.AddItem("barmor",       "Body Armor");
-		}
-		menu.Display(client, MENU_TIME_FOREVER);
-		return Plugin_Handled;
 	}
 	return Plugin_Handled;
 }
-char but[128];
+
 public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 {
 	if (action == MenuAction_Select)
 	{
 		char info[32], display[64];
+		//itemNum is the position of the item the client selected.
+		//This gets the strings you set in AddItem() and stores them in info and display
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		////Check if tactnades is selected
 		if (StrEqual(info, "tactnades"))
 		{
-			
 			Menu tgmenu = new Menu(Menu_TactNades);
 			tgmenu.SetTitle("Tactical Grenades");
+			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+			//Check if flashbang is enabled 
 			if(FlashbangToggle.IntValue == 1 || FlashbangToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Flashbang", FlashbangPrice.IntValue);
 				tgmenu.AddItem("weapon_flashbang", but);
 			}
+			//Check if smoke grenade is enabled
 			if(SmokeToggle.IntValue == 1 || SmokeToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Smoke Grenade", SmokePrice.IntValue);
 				tgmenu.AddItem("weapon_smokegrenade", but);
 			}
+			//Check if decoy is enabled
 			if(DecoyToggle.IntValue == 1 || DecoyToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Decoy Grenade", DecoyPrice.IntValue);
 				tgmenu.AddItem("weapon_decoy", but);
 			}
+			//Check if tactical awareness is enabled
 			if(TactAwareToggle.IntValue == 1 || TactAwareToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
 				tgmenu.AddItem("weapon_tagrenade", but);
 			}
+			//Check if snowball is enabled
 			if(SnowballToggle.IntValue == 1 || SnowballToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Snowball", SnowballPrice.IntValue);
 				tgmenu.AddItem("weapon_snowball", but);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
+		//Check if offnade is selected
 		else if (StrEqual(info, "offnade"))
 		{
 			Menu tgmenu = new Menu(Menu_OffNades);
 			tgmenu.SetTitle("Offensive Utility");
+			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+			//Check if hegrenade is enabled
 			if(HEToggle.IntValue == 1 || HEToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)HE Grenade", HEPrice.IntValue);
 				tgmenu.AddItem("weapon_hegrenade", but);
 			}
+			//Check if molotov is enabled 
 			if(MolotovToggle.IntValue == 1 || MolotovToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Molotov", MolotovPrice.IntValue);
 				tgmenu.AddItem("weapon_molotov", but);
 			}
+			//Check if breach charge is enabled
 			if(BreachChargeToggle.IntValue == 1 || BreachChargeToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Breach Charge", BreachChargePrice.IntValue);
 				tgmenu.AddItem("weapon_breachcharge", but);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
+		//Check if harmor is selected
 		else if (StrEqual(info, "harmor"))
 		{
 			Menu tgmenu = new Menu(Menu_HeavyArmor);
 			tgmenu.SetTitle("Heavy Armor");
+			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+			//Check if heavyarmor10 is enabled
 			if(HeavyArmor10Toggle.IntValue == 1 || HeavyArmor10Toggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Add 10 Heavy Armor", HeavyArmor10Price.IntValue);
 				tgmenu.AddItem("ha15", but);
@@ -263,43 +311,53 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 		delete menu;
 	}
 }
+
 public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 {
 	if (action == MenuAction_Select)
 	{
 		char info[32], display[64];
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		//Check if tactnades is selected
 		if (StrEqual(info, "tactnades"))
 		{
-			
 			Menu tgmenu = new Menu(Menu_TactNades);
 			tgmenu.SetTitle("Tactical Grenades");
+			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+			//Check if flashbang is enabled
 			if(FlashbangToggle.IntValue == 2 || FlashbangToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Flashbang", FlashbangPrice.IntValue);
 				tgmenu.AddItem("weapon_flashbang", but);
 			}
+			//Check if smokegrenade is enabled
 			if(SmokeToggle.IntValue == 2 || SmokeToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Smoke Grenade", SmokePrice.IntValue);
 				tgmenu.AddItem("weapon_smokegrenade", but);
 			}
+			//Check if decoy is enabled
 			if(DecoyToggle.IntValue == 2 || DecoyToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Decoy Grenade", DecoyPrice.IntValue);
 				tgmenu.AddItem("weapon_decoy", but);
 			}
+			//Check if tactical awareness is enabled
 			if(TactAwareToggle.IntValue == 2 || TactAwareToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
 				tgmenu.AddItem("weapon_tagrenade", but);
 			}
+			//Check if snowball is enabled
 			if(SnowballToggle.IntValue == 2 || SnowballToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Snowball", SnowballPrice.IntValue);
 				tgmenu.AddItem("weapon_snowball", but);
 			}
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
+		//Check if bodyarmor is selected
 		else if (StrEqual(info, "barmor"))
 		{
 			Menu tgmenu = new Menu(Menu_BodyArmor);
 			tgmenu.SetTitle("Armor");
+			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+			//Check if bodyarmor is enabled
 			if(BodyArmor10Toggle.IntValue == 2 || BodyArmor10Toggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Add 10 Body Amor", BodyArmor10Price.IntValue);
 				tgmenu.AddItem("ba10", but);
@@ -319,22 +377,28 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 			
 			tgmenu.Display(client, MENU_TIME_FOREVER);
 		}
+		//Check if pitols is selected
 		else if(StrEqual(info, "pistols"))
 		{
 			Menu tgmenu = new Menu(Menu_Pistols);
 			tgmenu.SetTitle("Pistols");
+			//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+			//Check if glock is enabled
 			if(GlockToggle.IntValue == 2 || GlockToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Glock", GlockPrice.IntValue);
 				tgmenu.AddItem("weapon_glock", but);
 			}
+			//Check if cz75 is enabled
 			if(CZ75Toggle.IntValue == 2 || CZ75Toggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)CZ75A", CZ75Price.IntValue);
 				tgmenu.AddItem("weapon_cz75a", but);
 			}
+			//Check if deagle is enabled
 			if(DeagleToggle.IntValue == 2 || DeagleToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)Deagle", DeaglePrice.IntValue);
 				tgmenu.AddItem("weapon_deagle", but);
 			}
+			//Check if revolver is enabled
 			if(BumpyToggle.IntValue == 2 || BumpyToggle.IntValue == 3){
 				Format(but, sizeof(but), "($%d)BumpyBumpy", BumpyPrice.IntValue);
 				tgmenu.AddItem("weapon_revolver", but);
@@ -355,17 +419,21 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 		CCSPlayer p = CCSPlayer(client);
 		char info[32], display[64];
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		//Check if flashbang is selected
 		if (StrEqual(info, "weapon_flashbang"))
 		{
+			//Check if player has enough money
 			if(p.Money >= FlashbangPrice.IntValue){
 				p.Money -= FlashbangPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_flashbang");
 			}
+			//Print if player does not have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
 
 		}
+		//Check if smokegrenade is selected
 		else if (StrEqual(info, "weapon_smokegrenade"))
 		{
 			if(p.Money >= SmokePrice.IntValue){
@@ -376,6 +444,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
+		//Check if decoy is selected
 		else if (StrEqual(info, "weapon_decoy"))
 		{
 			if(p.Money >= DecoyPrice.IntValue){
@@ -386,6 +455,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
+		//Check if tagrenade is selected
 		else if (StrEqual(info, "weapon_tagrenade"))
 		{
 			if(p.Money >= TactAwarePrice.IntValue){
@@ -396,6 +466,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
+		//Check if snowball is selected
 		else if (StrEqual(info, "weapon_snowball"))
 		{
 			if(p.Money >= SnowballPrice.IntValue){
@@ -421,19 +492,21 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 	{
 		CCSPlayer p = CCSPlayer(client);
 		char info[32], display[64];
-		//itemNum is the position of the item the client selected.
-		//This gets the strings you set in AddItem() and stores them in info and display
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		//Check if hegrenade is selected
 		if (StrEqual(info, "weapon_hegrenade"))
 		{
+			//Check if player has enough money
 			if(p.Money >= HEPrice.IntValue){
 				p.Money -= HEPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_hegrenade");
 			}
+			//Print if player doesn't have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
+		//Check if decoy is selected
 		else if (StrEqual(info, "weapon_molotov"))
 		{
 			if(p.Money >= MolotovPrice.IntValue){
@@ -444,6 +517,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
+		//Check if breachcharge is selected
 		else if (StrEqual(info, "weapon_breachcharge"))
 		{
 			if(p.Money >= BreachChargePrice.IntValue){
@@ -467,13 +541,14 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 	{
 		CCSPlayer p = CCSPlayer(client);
 		char info[32], display[64];
-		//itemNum is the position of the item the client selected.
-		//This gets the strings you set in AddItem() and stores them in info and display
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		//Check if heavyarmor is selected
 		if (StrEqual(info, "ha10"))
 		{
+			//Check if player has enough money
 			if(p.Money >= HeavyArmor10Price.IntValue){
 				p.Money -= HeavyArmor10Price.IntValue;
+				//Add save hand and player model
 				char sModel[PLATFORM_MAX_PATH];
 				char sHand[PLATFORM_MAX_PATH];
 				p.GetPropString(Prop_Send, "m_szArmsModel", sHand, sizeof(sHand));
@@ -481,9 +556,11 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 				p.Armor = 10;
 				p.Helmet = true;
 				p.HeavyArmor = true;
+				//set hand and player model
 				p.SetModel(sModel);
 				p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
 			}
+			//Print if player doesn't have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
@@ -555,17 +632,18 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 	{
 		CCSPlayer p = CCSPlayer(client);
 		char info[32], display[64];
-		//itemNum is the position of the item the client selected.
-		//This gets the strings you set in AddItem() and stores them in info and display
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		//Check if bodyarmor is selected
 		if (StrEqual(info, "ba10"))
 		{
+			//Check if player has enough money
 			if(p.Money >= BodyArmor10Price.IntValue){
 				p.Money -= BodyArmor10Price.IntValue;
 				p.Armor += 10;
 				p.Helmet = false;
 				p.HeavyArmor = false;
 			}
+			//Print if player doens't have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
@@ -619,22 +697,25 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 	{
 		CCSPlayer p = CCSPlayer(client);
 		char info[32], display[64];
-		//itemNum is the position of the item the client selected.
-		//This gets the strings you set in AddItem() and stores them in info and display
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+		//Check if player's secondary slot is empty
 		if(p.GetWeapon(CS_SLOT_SECONDARY).IsNull){
+			//Check if glock is selected
 			if (StrEqual(info, "weapon_glock"))
 			{
+				//Check if player has enough money
 				if(p.Money >= GlockPrice.IntValue){
 					p.Money -= GlockPrice.IntValue;
 					CWeapon gkwep = GivePlayerWeapon(p, "weapon_glock");
 					gkwep.Ammo = 10;
 					gkwep.ReserveAmmo = 0;
 				}
+				//Print if player doesn't have enough money
 				else{
 					PrintToChat(client, prefix ... nomoney);
 				}
 			}
+			//Check if cz75a is selected
 			else if (StrEqual(info, "weapon_cz75a"))
 			{
 				if(p.Money >= CZ75Price.IntValue){
@@ -647,18 +728,20 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					PrintToChat(client, prefix ... nomoney);
 				}
 			}
+			//Check if deagle is selected
 			else if (StrEqual(info, "weapon_deagle"))
 			{
 				if(p.Money >= DeaglePrice.IntValue){
 					p.Money -= DeaglePrice.IntValue;
 					CWeapon dgwep = GivePlayerWeapon(p, "weapon_deagle");
-					dgwep.Ammo = 2;
 					dgwep.ReserveAmmo = 0;
+					dgwep.Ammo = 2;
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
 				}
 			}
+			//Check if bumpy is selected
 			else if (StrEqual(info, "weapon_revolver"))
 			{
 				if(p.Money >= BumpyPrice.IntValue){
@@ -672,6 +755,7 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 				}
 			}
 		}
+		//Print if player already has a secondary
 		else
 		{
 			PrintToChat(client, prefix ... "You already have a secondary!");
