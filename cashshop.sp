@@ -83,64 +83,64 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	
 	//Tactical Grenade
-	FlashbangPrice =				CreateConVar("sm_cashshop_price_flashbang",				"5000",  "Price of Flashbang");
-	SmokePrice =					CreateConVar("sm_cashshop_price_smokegrenade",			"5000",  "Price of Smoke Grenade");
-	DecoyPrice =					CreateConVar("sm_cashshop_price_decoy",					"5000",  "Price of Decoy Grenade");
-	TactAwarePrice =				CreateConVar("sm_cashshop_price_tacticalawareness",		"5000",  "Price of Tactical Awareness Grenade");
-	SnowballPrice =					CreateConVar("sm_cashshop_price_snowball",				"100",   "Price of Snowball");
+	FlashbangPrice = CreateConVar("sm_cashshop_price_flashbang", "5000", "Price of Flashbang");
+	SmokePrice = CreateConVar("sm_cashshop_price_smokegrenade", "5000", "Price of Smoke Grenade");
+	DecoyPrice = CreateConVar("sm_cashshop_price_decoy", "5000", "Price of Decoy Grenade");
+	TactAwarePrice = CreateConVar("sm_cashshop_price_tacticalawareness", "5000", "Price of Tactical Awareness Grenade");
+	SnowballPrice = CreateConVar("sm_cashshop_price_snowball", "100", "Price of Snowball");
 	//Offensive Utility 
-	HEPrice =						CreateConVar("sm_cashshop_price_hegrenade",				"8000",  "Price of HE Grenade");
-	MolotovPrice =					CreateConVar("sm_cashshop_price_molotov",				"8000",  "Price of Molotov");
-	BreachChargePrice =				CreateConVar("sm_cashshop_price_breachcharge",			"12000", "Price of Breach Charge");
+	HEPrice = CreateConVar("sm_cashshop_price_hegrenade", "8000", "Price of HE Grenade");
+	MolotovPrice = CreateConVar("sm_cashshop_price_molotov", "8000", "Price of Molotov");
+	BreachChargePrice = CreateConVar("sm_cashshop_price_breachcharge", "12000", "Price of Breach Charge");
 	//Pistols
-	GlockPrice =					CreateConVar("sm_cashshop_price_glock",					"16000", "Price of Glock");
-	CZ75Price =						CreateConVar("sm_cashshop_price_cz75a",					"18000", "Price of CZ75A");
-	DeaglePrice =					CreateConVar("sm_cashshop_price_deagle",				"20000", "Price of Deagle");
-	BumpyPrice =					CreateConVar("sm_cashshop_price_revolver",				"20000", "Price of Revolver");
+	GlockPrice = CreateConVar("sm_cashshop_price_glock", "16000", "Price of Glock");
+	CZ75Price = CreateConVar("sm_cashshop_price_cz75a", "18000", "Price of CZ75A");
+	DeaglePrice = CreateConVar("sm_cashshop_price_deagle", "20000", "Price of Deagle");
+	BumpyPrice = CreateConVar("sm_cashshop_price_revolver", "20000", "Price of Revolver");
 	//Heavy Armor
-	HeavyArmor10Price =				CreateConVar("sm_cashshop_price_heavyarmor10",			"10000", "Price of Heavy Armor +10");
-	HeavyArmor15Price =				CreateConVar("sm_cashshop_price_heavyarmor15",			"12000", "Price of Heavy Armor +15");
-	HeavyArmor20Price =				CreateConVar("sm_cashshop_price_heavyarmor20",			"14000", "Price of Heavy Armor +20");
-	HeavyArmor25Price =				CreateConVar("sm_cashshop_price_heavyarmor25",			"16000", "Price of Heavy Armor +25");
+	HeavyArmor10Price = CreateConVar("sm_cashshop_price_heavyarmor10", "10000", "Price of Heavy Armor +10");
+	HeavyArmor15Price = CreateConVar("sm_cashshop_price_heavyarmor15", "12000", "Price of Heavy Armor +15");
+	HeavyArmor20Price = CreateConVar("sm_cashshop_price_heavyarmor20", "14000", "Price of Heavy Armor +20");
+	HeavyArmor25Price = CreateConVar("sm_cashshop_price_heavyarmor25", "16000", "Price of Heavy Armor +25");
 	//Body Armor
-	BodyArmor10Price =				CreateConVar("sm_cashshop_price_armor10",				"4000",  "Price of Armor +10");
-	BodyArmor15Price =				CreateConVar("sm_cashshop_price_armor15",				"5200",  "Price of Armor +15");
-	BodyArmor20Price =				CreateConVar("sm_cashshop_price_armor20",				"6400",  "Price of Armor +20");
-	BodyArmor25Price =				CreateConVar("sm_cashshop_price_armor25",				"7600",  "Price of Armor +25");
+	BodyArmor10Price = CreateConVar("sm_cashshop_price_armor10", "4000",  "Price of Armor +10");
+	BodyArmor15Price = CreateConVar("sm_cashshop_price_armor15", "5200",  "Price of Armor +15");
+	BodyArmor20Price = CreateConVar("sm_cashshop_price_armor20", "6400",  "Price of Armor +20");
+	BodyArmor25Price = CreateConVar("sm_cashshop_price_armor25", "7600",  "Price of Armor +25");
 	
 	//Tactical Grenade
-	FlashbangToggle =				CreateConVar("sm_cashshop_toggle_flashbang",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	SmokeToggle =					CreateConVar("sm_cashshop_toggle_smoke",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	DecoyToggle =					CreateConVar("sm_cashshop_toggle_decoy",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	TactAwareToggle =				CreateConVar("sm_cashshop_toggle_tacticalawareness", 	"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	SnowballToggle =				CreateConVar("sm_cashshop_toggle_snowball",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	FlashbangToggle = CreateConVar("sm_cashshop_toggle_flashbang", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	SmokeToggle = CreateConVar("sm_cashshop_toggle_smoke", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	DecoyToggle = CreateConVar("sm_cashshop_toggle_decoy", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	TactAwareToggle = CreateConVar("sm_cashshop_toggle_tacticalawareness", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	SnowballToggle = CreateConVar("sm_cashshop_toggle_snowball", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Offensive Utility
-	HEToggle =						CreateConVar("sm_cashshop_toggle_hegrenade",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	MolotovToggle =					CreateConVar("sm_cashshop_toggle_molotov",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	BreachChargeToggle =			CreateConVar("sm_cashshop_toggle_breachcharge",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HEToggle = CreateConVar("sm_cashshop_toggle_hegrenade", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	MolotovToggle = CreateConVar("sm_cashshop_toggle_molotov", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BreachChargeToggle = CreateConVar("sm_cashshop_toggle_breachcharge", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Pistols
-	GlockToggle =					CreateConVar("sm_cashshop_toggle_glock",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	CZ75Toggle =					CreateConVar("sm_cashshop_toggle_cz75a",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	DeagleToggle =					CreateConVar("sm_cashshop_toggle_deagle",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	BumpyToggle =					CreateConVar("sm_cashshop_toggle_revolver",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	GlockToggle = CreateConVar("sm_cashshop_toggle_glock", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	CZ75Toggle = CreateConVar("sm_cashshop_toggle_cz75a", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	DeagleToggle = CreateConVar("sm_cashshop_toggle_deagle", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BumpyToggle = CreateConVar("sm_cashshop_toggle_revolver", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Heavy Armor
-	HeavyArmor10Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor10",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	HeavyArmor15Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor15",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	HeavyArmor20Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor20",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	HeavyArmor25Toggle =			CreateConVar("sm_cashshop_toggle_heavyarmor25",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HeavyArmor10Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor10", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HeavyArmor15Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor15", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HeavyArmor20Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor20", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HeavyArmor25Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor25", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Body Armor
-	BodyArmor10Toggle =				CreateConVar("sm_cashshop_toggle_armor10",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	BodyArmor15Toggle =				CreateConVar("sm_cashshop_toggle_armor15",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	BodyArmor20Toggle =				CreateConVar("sm_cashshop_toggle_armor20",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	BodyArmor25Toggle =				CreateConVar("sm_cashshop_toggle_armor25",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmor10Toggle = CreateConVar("sm_cashshop_toggle_armor10", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmor15Toggle = CreateConVar("sm_cashshop_toggle_armor15", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmor20Toggle = CreateConVar("sm_cashshop_toggle_armor20", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmor25Toggle = CreateConVar("sm_cashshop_toggle_armor25", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	//Menus
-	CashShopToggle =				CreateConVar("sm_cashshop_toggle_all",					"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	TactNadesToggle =				CreateConVar("sm_cashshop_toggle_tactnades",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	OffNadesToggle =				CreateConVar("sm_cashshop_toggle_offnades",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	HeavyArmorToggle =				CreateConVar("sm_cashshop_toggle_armor_heavy",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	BodyArmorToggle =				CreateConVar("sm_cashshop_toggle_armor_body",			"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	PistolsToggle =					CreateConVar("sm_cashshop_toggle_pistols",				"3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	CashShopToggle = CreateConVar("sm_cashshop_toggle_all", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	TactNadesToggle = CreateConVar("sm_cashshop_toggle_tactnades", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	OffNadesToggle = CreateConVar("sm_cashshop_toggle_offnades", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HeavyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_heavy", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BodyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_body", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	PistolsToggle = CreateConVar("sm_cashshop_toggle_pistols", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	
 	AutoExecConfig(true, "plugin.cashshop-jb");
@@ -174,15 +174,15 @@ public Action Command_CashShop(int client, int args)
 				menu.SetTitle("Cash Shop");
 				//Check if tacical grenade is enabled
 				if(TactNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || TactNadesToggle.IntValue == SHOP_ITEM_ENABLED){
-					menu.AddItem("tactnades",    "Tactical Grenade");
+					menu.AddItem("tactnades", "Tactical Grenade");
 				}
 				//Check if offensive utility is enabled
 				if(OffNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || OffNadesToggle.IntValue == SHOP_ITEM_ENABLED){
-					menu.AddItem("offnade",      "Offensive Utility");
+					menu.AddItem("offnade", "Offensive Utility");
 				}
 				//Check if heavy armor is enabled
 				if(HeavyArmorToggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmorToggle.IntValue == SHOP_ITEM_ENABLED){
-					menu.AddItem("harmor",       "Heavy Armor");
+					menu.AddItem("harmor", "Heavy Armor");
 				}
 				menu.Display(client, MENU_TIME_FOREVER);
 				return Plugin_Handled;
@@ -201,15 +201,15 @@ public Action Command_CashShop(int client, int args)
 				menu.SetTitle("Cash Shop");
 				//Check if tacical grenade is enabled
 				if(TactNadesToggle.IntValue >= SHOP_ITEM_T_ONLY){
-					menu.AddItem("tactnades",    "Tactical Grenade");
+					menu.AddItem("tactnades", "Tactical Grenade");
 				}
 				//Check if pistol is enabled
 				if(PistolsToggle.IntValue >= SHOP_ITEM_T_ONLY){
-					menu.AddItem("pistols",      "Pistols");
+					menu.AddItem("pistols", "Pistols");
 				}
 				//Check if body armor is enabled
 				if(BodyArmorToggle.IntValue >= SHOP_ITEM_T_ONLY){
-					menu.AddItem("barmor",       "Body Armor");
+					menu.AddItem("barmor", "Body Armor");
 				}
 				menu.Display(client, MENU_TIME_FOREVER);
 				return Plugin_Handled;
