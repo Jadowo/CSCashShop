@@ -7,9 +7,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define prefix "[SM] "
+#define prefix " \x0A[\x0Bx\x08G\x0A]\x01 "
 #define nomoney "You don't have enough money!"
-#define disable "This is currently disabled!"
+#define disable "The Cash Shop is currently disabled!"
 #define SHOP_ITEM_DISABLED 0
 #define SHOP_ITEM_CT_ONLY 1
 #define SHOP_ITEM_T_ONLY 2
@@ -449,6 +449,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= FlashbangPrice.IntValue){
 					p.Money -= FlashbangPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_flashbang");
+					PrintToChat(client, prefix ... "You bought a \x0BFlashbang \x01for \x06$%d\x01!", FlashbangPrice.IntValue);
 				}
 				//Print if player does not have enough money
 				else{
@@ -462,6 +463,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= SmokePrice.IntValue){
 					p.Money -= SmokePrice.IntValue;
 					GivePlayerWeapon(p, "weapon_smokegrenade");
+					PrintToChat(client, prefix ... "You bought a \x0BSmoke Grenade \x01for \x06$%d\x01!", SmokePrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -473,6 +475,8 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= DecoyPrice.IntValue){
 					p.Money -= DecoyPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_decoy");
+					PrintToChat(client, prefix ... "You bought a \x0BDecoy Grenade \x01for \x06$%d\x01!", DecoyPrice.IntValue);
+					
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -484,6 +488,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= TactAwarePrice.IntValue){
 					p.Money -= TactAwarePrice.IntValue;
 					GivePlayerWeapon(p, "weapon_tagrenade");
+					PrintToChat(client, prefix ... "You bought a \x0BTactical Awareness Grenade \x01for \x06$%d\x01!", TactAwarePrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -495,6 +500,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= SnowballPrice.IntValue){
 					p.Money -= SnowballPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_snowball");
+					PrintToChat(client, prefix ... "You bought a \x0BSnowball \x01for \x06$%d\x01!", SnowballPrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -528,6 +534,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= HEPrice.IntValue){
 					p.Money -= HEPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_hegrenade");
+					PrintToChat(client, prefix ... "You bought a \x0BHE Grenade \x01for \x06$%d\x01!", HEPrice.IntValue);
 				}
 				//Print if player doesn't have enough money
 				else{
@@ -540,6 +547,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= MolotovPrice.IntValue){
 					p.Money -= MolotovPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_molotov");
+					PrintToChat(client, prefix ... "You bought a \x0BMolotov \x01for \x06$%d\x01!", MolotovPrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -550,7 +558,9 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 			{
 				if(p.Money >= BreachChargePrice.IntValue){
 					p.Money -= BreachChargePrice.IntValue;
-					GivePlayerWeapon(p, "weapon_breachcharge");
+					CWeapon bcwep = GivePlayerWeapon(p, "weapon_breachcharge");
+					bcwep.Ammo = 1;
+					PrintToChat(client, prefix ... "You bought a \x0BBreach Charge \x01for \x06$%d\x01!", BreachChargePrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -592,6 +602,7 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					//set hand and player model
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+					PrintToChat(client, prefix ... "You bought \x0B10 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor10Price.IntValue);
 				}
 				//Print if player doesn't have enough money
 				else{
@@ -611,6 +622,7 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+					PrintToChat(client, prefix ... "You bought \x0B15 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor15Price.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -629,6 +641,7 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+					PrintToChat(client, prefix ... "You bought \x0B20 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor20Price.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -647,6 +660,7 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+					PrintToChat(client, prefix ... "You bought \x0B25 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor25Price.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -680,6 +694,7 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 10;
 					p.Helmet = false;
 					p.HeavyArmor = false;
+					PrintToChat(client, prefix ... "You bought \x0B10 Body Armor \x01for \x06$%d\x01!", BodyArmor20Price.IntValue);
 				}
 				//Print if player doens't have enough money
 				else{
@@ -693,6 +708,7 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 15;
 					p.Helmet = false;
 					p.HeavyArmor = false;
+					PrintToChat(client, prefix ... "You bought \x0B15 Body Armor \x01for \x06$%d\x01!", BodyArmor15Price.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -705,6 +721,7 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 20;
 					p.Helmet = false;
 					p.HeavyArmor = false;
+					PrintToChat(client, prefix ... "You bought \x0B20 Body Armor \x01for \x06$%d\x01!", BodyArmor20Price.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -717,6 +734,7 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 25;
 					p.Helmet = false;
 					p.HeavyArmor = false;
+					PrintToChat(client, prefix ... "You bought \x0B25 Body Armor \x01for \x06$%d\x01!", BodyArmor25Price.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -752,6 +770,7 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 						CWeapon gkwep = GivePlayerWeapon(p, "weapon_glock");
 						gkwep.Ammo = 10;
 						gkwep.ReserveAmmo = 0;
+						PrintToChat(client, prefix ... "You bought a \x0BGlock \x01for \x06$%d\x01!", GlockPrice.IntValue);
 					}
 					//Print if player doesn't have enough money
 					else{
@@ -766,6 +785,7 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 						CWeapon czwep = GivePlayerWeapon(p, "weapon_cz75a");
 						czwep.Ammo = 6;
 						czwep.ReserveAmmo = 0;
+						PrintToChat(client, prefix ... "You bought a \x0BCZ75A \x01for \x06$%d\x01!", CZ75Price.IntValue);
 					}
 					else{
 						PrintToChat(client, prefix ... nomoney);
@@ -777,8 +797,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= DeaglePrice.IntValue){
 						p.Money -= DeaglePrice.IntValue;
 						CWeapon dgwep = GivePlayerWeapon(p, "weapon_deagle");
+						dgwep.Ammo = 1;
 						dgwep.ReserveAmmo = 0;
-						dgwep.Ammo = 2;
+						PrintToChat(client, prefix ... "You bought a \x0BDeagle \x01for \x06$%d\x01!", DeaglePrice.IntValue);
 					}
 					else{
 						PrintToChat(client, prefix ... nomoney);
@@ -792,6 +813,8 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 						CWeapon r8wep = GivePlayerWeapon(p, "weapon_revolver");
 						r8wep.Ammo = 1;
 						r8wep.ReserveAmmo = 0;
+						PrintToChat(client, prefix ... "You bought a \x0BRevolver \x01for \x06$%d\x01!", BumpyPrice.IntValue);
+						PrintToConsole(client, "bumpy bumpy");
 					}
 					else{
 						PrintToChat(client, prefix ... nomoney);
