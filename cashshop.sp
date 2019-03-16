@@ -1,4 +1,3 @@
-
 #include <sourcemod>
 #include <ccsplayer>
 #include <sdktools>
@@ -36,6 +35,7 @@ ConVar MolotovToggle;
 ConVar BreachChargeToggle;
 ConVar SnowballToggle;
 ConVar GlockToggle;
+ConVar USPToggle;
 ConVar CZ75Toggle;
 ConVar DeagleToggle;
 ConVar BumpyToggle;
@@ -43,6 +43,7 @@ ConVar HeavyArmor10Toggle;
 ConVar HeavyArmor15Toggle;
 ConVar HeavyArmor20Toggle;
 ConVar HeavyArmor25Toggle;
+ConVar HeavyArmor100Toggle;
 ConVar BodyArmor10Toggle;
 ConVar BodyArmor15Toggle;
 ConVar BodyArmor20Toggle;
@@ -56,6 +57,7 @@ ConVar MolotovPrice;
 ConVar BreachChargePrice;
 ConVar SnowballPrice;
 ConVar GlockPrice;
+ConVar USPPrice;
 ConVar CZ75Price;
 ConVar DeaglePrice;
 ConVar BumpyPrice;
@@ -63,6 +65,7 @@ ConVar HeavyArmor10Price;
 ConVar HeavyArmor15Price;
 ConVar HeavyArmor20Price;
 ConVar HeavyArmor25Price;
+ConVar HeavyArmor100Price;
 ConVar BodyArmor10Price;
 ConVar BodyArmor15Price;
 ConVar BodyArmor20Price;
@@ -83,18 +86,19 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	
 	//Tactical Grenade
-	FlashbangPrice = CreateConVar("sm_cashshop_price_flashbang", "5000", "Price of Flashbang");
-	SmokePrice = CreateConVar("sm_cashshop_price_smokegrenade", "5000", "Price of Smoke Grenade");
+	FlashbangPrice = CreateConVar("sm_cashshop_price_flashbang", "7000", "Price of Flashbang");
+	SmokePrice = CreateConVar("sm_cashshop_price_smokegrenade", "7000", "Price of Smoke Grenade");
 	DecoyPrice = CreateConVar("sm_cashshop_price_decoy", "5000", "Price of Decoy Grenade");
-	TactAwarePrice = CreateConVar("sm_cashshop_price_tacticalawareness", "5000", "Price of Tactical Awareness Grenade");
-	SnowballPrice = CreateConVar("sm_cashshop_price_snowball", "100", "Price of Snowball");
+	TactAwarePrice = CreateConVar("sm_cashshop_price_tacticalawareness", "8000", "Price of Tactical Awareness Grenade");
+	SnowballPrice = CreateConVar("sm_cashshop_price_snowball", "2500", "Price of Snowball");
 	//Offensive Utility 
 	HEPrice = CreateConVar("sm_cashshop_price_hegrenade", "8000", "Price of HE Grenade");
-	MolotovPrice = CreateConVar("sm_cashshop_price_molotov", "8000", "Price of Molotov");
+	MolotovPrice = CreateConVar("sm_cashshop_price_molotov", "10000", "Price of Molotov");
 	BreachChargePrice = CreateConVar("sm_cashshop_price_breachcharge", "12000", "Price of Breach Charge");
 	//Pistols
 	GlockPrice = CreateConVar("sm_cashshop_price_glock", "16000", "Price of Glock");
-	CZ75Price = CreateConVar("sm_cashshop_price_cz75a", "18000", "Price of CZ75A");
+	USPPrice = CreateConVar("sm_cashshop_price_usp", "18000", "Price of USP");
+	CZ75Price = CreateConVar("sm_cashshop_price_cz75a", "19000", "Price of CZ75A");
 	DeaglePrice = CreateConVar("sm_cashshop_price_deagle", "20000", "Price of Deagle");
 	BumpyPrice = CreateConVar("sm_cashshop_price_revolver", "20000", "Price of Revolver");
 	//Heavy Armor
@@ -102,11 +106,12 @@ public void OnPluginStart()
 	HeavyArmor15Price = CreateConVar("sm_cashshop_price_heavyarmor15", "12000", "Price of Heavy Armor +15");
 	HeavyArmor20Price = CreateConVar("sm_cashshop_price_heavyarmor20", "14000", "Price of Heavy Armor +20");
 	HeavyArmor25Price = CreateConVar("sm_cashshop_price_heavyarmor25", "16000", "Price of Heavy Armor +25");
+	HeavyArmor100Price = CreateConVar("sm_cashshop_price_heavyarmor100", "60000", "Price of Heavy Armor +100");
 	//Body Armor
-	BodyArmor10Price = CreateConVar("sm_cashshop_price_armor10", "4000",  "Price of Armor +10");
-	BodyArmor15Price = CreateConVar("sm_cashshop_price_armor15", "5200",  "Price of Armor +15");
-	BodyArmor20Price = CreateConVar("sm_cashshop_price_armor20", "6400",  "Price of Armor +20");
-	BodyArmor25Price = CreateConVar("sm_cashshop_price_armor25", "7600",  "Price of Armor +25");
+	BodyArmor10Price = CreateConVar("sm_cashshop_price_armor10", "5000",  "Price of Armor +10");
+	BodyArmor15Price = CreateConVar("sm_cashshop_price_armor15", "6200",  "Price of Armor +15");
+	BodyArmor20Price = CreateConVar("sm_cashshop_price_armor20", "7400",  "Price of Armor +20");
+	BodyArmor25Price = CreateConVar("sm_cashshop_price_armor25", "8600",  "Price of Armor +25");
 	
 	//Tactical Grenade
 	FlashbangToggle = CreateConVar("sm_cashshop_toggle_flashbang", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -120,6 +125,7 @@ public void OnPluginStart()
 	BreachChargeToggle = CreateConVar("sm_cashshop_toggle_breachcharge", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Pistols
 	GlockToggle = CreateConVar("sm_cashshop_toggle_glock", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	USPToggle = CreateConVar("sm_cashshop_toggle_usp", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	CZ75Toggle = CreateConVar("sm_cashshop_toggle_cz75a", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	DeagleToggle = CreateConVar("sm_cashshop_toggle_deagle", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BumpyToggle = CreateConVar("sm_cashshop_toggle_revolver", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -128,6 +134,7 @@ public void OnPluginStart()
 	HeavyArmor15Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor15", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor20Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor20", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmor25Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor25", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HeavyArmor100Toggle = CreateConVar("sm_cashshop_toggle_heavyarmor100", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Body Armor
 	BodyArmor10Toggle = CreateConVar("sm_cashshop_toggle_armor10", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor15Toggle = CreateConVar("sm_cashshop_toggle_armor15", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -315,6 +322,10 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 					Format(displayprice, sizeof(displayprice), "($%d)Add 25 Heavy Armor", HeavyArmor25Price.IntValue);
 					tgmenu.AddItem("ha25", displayprice);
 				}
+				if(HeavyArmor100Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor100Toggle.IntValue == 3){
+					Format(displayprice, sizeof(displayprice), "($%d)Add 100 Heavy Armor", HeavyArmor100Price.IntValue);
+					tgmenu.AddItem("ha100", displayprice);
+				}
 				tgmenu.Display(client, MENU_TIME_FOREVER);
 			}
 		}
@@ -405,6 +416,10 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 				if(GlockToggle.IntValue >= SHOP_ITEM_T_ONLY){
 					Format(displayprice, sizeof(displayprice), "($%d)Glock", GlockPrice.IntValue);
 					tgmenu.AddItem("weapon_glock", displayprice);
+				}
+				if(USPToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					Format(displayprice, sizeof(displayprice), "($%d)USP", USPPrice.IntValue);
+					tgmenu.AddItem("weapon_usp", displayprice);
 				}
 				//Check if cz75 is enabled
 				if(CZ75Toggle.IntValue >= SHOP_ITEM_T_ONLY){
@@ -666,6 +681,25 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					PrintToChat(client, prefix ... nomoney);
 				}
 			}
+			else if (StrEqual(info, "ha100"))
+			{
+				if(p.Money >= HeavyArmor100Price.IntValue){
+					p.Money -= HeavyArmor100Price.IntValue;
+					char sModel[PLATFORM_MAX_PATH];
+					char sHand[PLATFORM_MAX_PATH];
+					p.GetPropString(Prop_Send, "m_szArmsModel", sHand, sizeof(sHand));
+					p.GetModel(sModel, sizeof(sModel));
+					p.Armor = 100;
+					p.Helmet = true;
+					p.HeavyArmor = true;
+					p.SetModel(sModel);
+					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
+					PrintToChat(client, prefix ... "You bought \x0B100 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor100Price.IntValue);
+				}
+				else{
+					PrintToChat(client, prefix ... nomoney);
+				}
+			}
 		}
 		else{
 			PrintToChat(client, prefix..."You must be alive to use the cash shop!");
@@ -768,9 +802,25 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= GlockPrice.IntValue){
 						p.Money -= GlockPrice.IntValue;
 						CWeapon gkwep = GivePlayerWeapon(p, "weapon_glock");
-						gkwep.Ammo = 10;
+						gkwep.Ammo = 5;
 						gkwep.ReserveAmmo = 0;
 						PrintToChat(client, prefix ... "You bought a \x0BGlock \x01for \x06$%d\x01!", GlockPrice.IntValue);
+					}
+					//Print if player doesn't have enough money
+					else{
+						PrintToChat(client, prefix ... nomoney);
+					}
+				}
+				//Check if usp is selected
+				else if (StrEqual(info, "weapon_usp"))
+				{
+					//Check if player has enough money
+					if(p.Money >= USPPrice.IntValue){
+						p.Money -= USPPrice.IntValue;
+						CWeapon uspwep = GivePlayerWeapon(p, "weapon_usp_silencer");
+						uspwep.Ammo = 4;
+						uspwep.ReserveAmmo = 0;
+						PrintToChat(client, prefix ... "You bought a \x0BUSP \x01for \x06$%d\x01!", USPPrice.IntValue);
 					}
 					//Print if player doesn't have enough money
 					else{
