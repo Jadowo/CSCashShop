@@ -39,6 +39,11 @@ ConVar USPToggle;
 ConVar CZ75Toggle;
 ConVar DeagleToggle;
 ConVar BumpyToggle;
+ConVar BizonToggle;
+ConVar MP9Toggle;
+ConVar FamasToggle;
+ConVar NegevToggle;
+ConVar ScoutToggle;
 ConVar HeavyArmor10Toggle;
 ConVar HeavyArmor15Toggle;
 ConVar HeavyArmor20Toggle;
@@ -61,6 +66,11 @@ ConVar USPPrice;
 ConVar CZ75Price;
 ConVar DeaglePrice;
 ConVar BumpyPrice;
+ConVar BizonPrice;
+ConVar MP9Price;
+ConVar FamasPrice;
+ConVar NegevPrice;
+ConVar ScoutPrice;
 ConVar HeavyArmor10Price;
 ConVar HeavyArmor15Price;
 ConVar HeavyArmor20Price;
@@ -76,6 +86,7 @@ ConVar HeavyArmorToggle;
 ConVar BodyArmorToggle;
 ConVar PistolsToggle;
 ConVar CashShopToggle;
+ConVar PrimaryToggle;
 
 
 public void OnPluginStart()
@@ -95,6 +106,12 @@ public void OnPluginStart()
 	HEPrice = CreateConVar("sm_cashshop_price_hegrenade", "8000", "Price of HE Grenade");
 	MolotovPrice = CreateConVar("sm_cashshop_price_molotov", "10000", "Price of Molotov");
 	BreachChargePrice = CreateConVar("sm_cashshop_price_breachcharge", "12000", "Price of Breach Charge");
+	//Primaries
+	BizonPrice = CreateConVar("sm_cashshop_price_bizon", "35000", "Price of PP Bizon");
+	MP9Price = CreateConVar("sm_cashshop_price_mp9", "35000", "Price of PP Bizon");
+	NegevPrice = CreateConVar("sm_cashshop_price_negev", "40000", "Price of PP Bizon");
+	FamasPrice = CreateConVar("sm_cashshop_price_famas", "42000", "Price of PP Bizon");
+	ScoutPrice = CreateConVar("sm_cashshop_price_scout", "45000", "Price of PP Bizon");
 	//Pistols
 	GlockPrice = CreateConVar("sm_cashshop_price_glock", "16000", "Price of Glock");
 	USPPrice = CreateConVar("sm_cashshop_price_usp", "18000", "Price of USP");
@@ -123,6 +140,12 @@ public void OnPluginStart()
 	HEToggle = CreateConVar("sm_cashshop_toggle_hegrenade", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	MolotovToggle = CreateConVar("sm_cashshop_toggle_molotov", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BreachChargeToggle = CreateConVar("sm_cashshop_toggle_breachcharge", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	//Primaries
+	BizonToggle = CreateConVar("sm_cashshop_toggle_bizon", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	MP9Toggle = CreateConVar("sm_cashshop_toggle_mp9", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	NegevToggle = CreateConVar("sm_cashshop_toggle_negev", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	FamasToggle = CreateConVar("sm_cashshop_toggle_famas", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	ScoutToggle = CreateConVar("sm_cashshop_toggle_scout", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Pistols
 	GlockToggle = CreateConVar("sm_cashshop_toggle_glock", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	USPToggle = CreateConVar("sm_cashshop_toggle_usp", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -143,6 +166,7 @@ public void OnPluginStart()
 	
 	//Menus
 	CashShopToggle = CreateConVar("sm_cashshop_toggle_all", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	PrimaryToggle = CreateConVar("sm_cashshop_toggle_primary", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	TactNadesToggle = CreateConVar("sm_cashshop_toggle_tactnades", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	OffNadesToggle = CreateConVar("sm_cashshop_toggle_offnades", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	HeavyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_heavy", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -183,6 +207,10 @@ public Action Command_CashShop(int client, int args)
 				if(TactNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || TactNadesToggle.IntValue == SHOP_ITEM_ENABLED){
 					menu.AddItem("tactnades", "Tactical Grenade");
 				}
+				//Check if primaries is enabled
+				if(PrimaryToggle.IntValue == SHOP_ITEM_CT_ONLY || PrimaryToggle.IntValue == SHOP_ITEM_ENABLED){
+					menu.AddItem("primary", "Primaries");
+				}
 				//Check if offensive utility is enabled
 				if(OffNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || OffNadesToggle.IntValue == SHOP_ITEM_ENABLED){
 					menu.AddItem("offnade", "Offensive Utility");
@@ -209,6 +237,10 @@ public Action Command_CashShop(int client, int args)
 				//Check if tacical grenade is enabled
 				if(TactNadesToggle.IntValue >= SHOP_ITEM_T_ONLY){
 					menu.AddItem("tactnades", "Tactical Grenade");
+				}
+				//Check if primaries is enabled
+				if(PrimaryToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					menu.AddItem("primary", "Primaries");
 				}
 				//Check if pistol is enabled
 				if(PistolsToggle.IntValue >= SHOP_ITEM_T_ONLY){
@@ -273,6 +305,39 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum)
 				if(SnowballToggle.IntValue == SHOP_ITEM_CT_ONLY || SnowballToggle.IntValue == 3){
 					Format(displayprice, sizeof(displayprice), "($%d)Snowball", SnowballPrice.IntValue);
 					tgmenu.AddItem("weapon_snowball", displayprice);
+				}
+				tgmenu.Display(client, MENU_TIME_FOREVER);
+			}
+			//Check if primary is selected
+			else if (StrEqual(info, "primary"))
+			{
+				Menu tgmenu = new Menu(Menu_TactNades);
+				tgmenu.SetTitle("Primaries");
+				//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+				//Check if bizon is enabled 
+				if(BizonToggle.IntValue == SHOP_ITEM_CT_ONLY || BizonToggle.IntValue == 3){
+					Format(displayprice, sizeof(displayprice), "($%d)Bizon", BizonPrice.IntValue);
+					tgmenu.AddItem("weapon_bizon", displayprice);
+				}
+				//Check if mp9 is enabled
+				if(MP9Toggle.IntValue == SHOP_ITEM_CT_ONLY || MP9Toggle.IntValue == 3){
+					Format(displayprice, sizeof(displayprice), "($%d)MP9", MP9Price.IntValue);
+					tgmenu.AddItem("weapon_mp9", displayprice);
+				}
+				//Check if negev is enabled
+				if(NegevToggle.IntValue == SHOP_ITEM_CT_ONLY || NegevToggle.IntValue == 3){
+					Format(displayprice, sizeof(displayprice), "($%d)Negev", NegevPrice.IntValue);
+					tgmenu.AddItem("weapon_negev", displayprice);
+				}
+				//Check if famas is enabled
+				if(FamasToggle.IntValue == SHOP_ITEM_CT_ONLY || FamasToggle.IntValue == 3){
+					Format(displayprice, sizeof(displayprice), "($%d)Famas", FamasPrice.IntValue);
+					tgmenu.AddItem("weapon_famas", displayprice);
+				}
+				//Check if scout is enabled
+				if(ScoutToggle.IntValue == SHOP_ITEM_CT_ONLY || ScoutToggle.IntValue == 3){
+					Format(displayprice, sizeof(displayprice), "($%d)SSG08", ScoutPrice.IntValue);
+					tgmenu.AddItem("weapon_ssg08", displayprice);
 				}
 				tgmenu.Display(client, MENU_TIME_FOREVER);
 			}
@@ -377,6 +442,39 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum)
 				if(SnowballToggle.IntValue >= SHOP_ITEM_T_ONLY){
 					Format(displayprice, sizeof(displayprice), "($%d)Snowball", SnowballPrice.IntValue);
 					tgmenu.AddItem("weapon_snowball", displayprice);
+				}
+				tgmenu.Display(client, MENU_TIME_FOREVER);
+			}
+			//Check if primary is selected
+			else if (StrEqual(info, "primary"))
+			{
+				Menu tgmenu = new Menu(Menu_Primary);
+				tgmenu.SetTitle("Primaries");
+				//0 = disabled, 1 = CT, 2 = T, 3 = Both Teams
+				//Check if bizon is enabled 
+				if(BizonToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					Format(displayprice, sizeof(displayprice), "($%d)Bizon", BizonPrice.IntValue);
+					tgmenu.AddItem("weapon_bizon", displayprice);
+				}
+				//Check if mp9 is enabled
+				if(MP9Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+					Format(displayprice, sizeof(displayprice), "($%d)MP9", MP9Price.IntValue);
+					tgmenu.AddItem("weapon_mp9", displayprice);
+				}
+				//Check if negev is enabled
+				if(NegevToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					Format(displayprice, sizeof(displayprice), "($%d)Negev", NegevPrice.IntValue);
+					tgmenu.AddItem("weapon_negev", displayprice);
+				}
+				//Check if famas is enabled
+				if(FamasToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					Format(displayprice, sizeof(displayprice), "($%d)Famas", FamasPrice.IntValue);
+					tgmenu.AddItem("weapon_famas", displayprice);
+				}
+				//Check if scout is enabled
+				if(ScoutToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					Format(displayprice, sizeof(displayprice), "($%d)SSG08", ScoutPrice.IntValue);
+					tgmenu.AddItem("weapon_ssg08", displayprice);
 				}
 				tgmenu.Display(client, MENU_TIME_FOREVER);
 			}
@@ -549,7 +647,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= HEPrice.IntValue){
 					p.Money -= HEPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_hegrenade");
-					PrintToChat(client, prefix ... "You bought a \x0BHE Grenade \x01for \x06$%d\x01!", HEPrice.IntValue);
+					PrintToChat(client, prefix ... "You bought a \x07HE Grenade \x01for \x06$%d\x01!", HEPrice.IntValue);
 				}
 				//Print if player doesn't have enough money
 				else{
@@ -562,7 +660,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 				if(p.Money >= MolotovPrice.IntValue){
 					p.Money -= MolotovPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_molotov");
-					PrintToChat(client, prefix ... "You bought a \x0BMolotov \x01for \x06$%d\x01!", MolotovPrice.IntValue);
+					PrintToChat(client, prefix ... "You bought a \x07Molotov \x01for \x06$%d\x01!", MolotovPrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -575,7 +673,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum)
 					p.Money -= BreachChargePrice.IntValue;
 					CWeapon bcwep = GivePlayerWeapon(p, "weapon_breachcharge");
 					bcwep.Ammo = 1;
-					PrintToChat(client, prefix ... "You bought a \x0BBreach Charge \x01for \x06$%d\x01!", BreachChargePrice.IntValue);
+					PrintToChat(client, prefix ... "You bought a \x07Breach Charge \x01for \x06$%d\x01!", BreachChargePrice.IntValue);
 				}
 				else{
 					PrintToChat(client, prefix ... nomoney);
@@ -802,9 +900,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= GlockPrice.IntValue){
 						p.Money -= GlockPrice.IntValue;
 						CWeapon gkwep = GivePlayerWeapon(p, "weapon_glock");
-						gkwep.Ammo = 5;
-						gkwep.ReserveAmmo = 0;
-						PrintToChat(client, prefix ... "You bought a \x0BGlock \x01for \x06$%d\x01!", GlockPrice.IntValue);
+						gkwep.Ammo = 0;
+						gkwep.ReserveAmmo = 6;
+						PrintToChat(client, prefix ... "You bought a \x07Glock \x01for \x06$%d\x01!", GlockPrice.IntValue);
 					}
 					//Print if player doesn't have enough money
 					else{
@@ -818,9 +916,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= USPPrice.IntValue){
 						p.Money -= USPPrice.IntValue;
 						CWeapon uspwep = GivePlayerWeapon(p, "weapon_usp_silencer");
-						uspwep.Ammo = 4;
-						uspwep.ReserveAmmo = 0;
-						PrintToChat(client, prefix ... "You bought a \x0BUSP \x01for \x06$%d\x01!", USPPrice.IntValue);
+						uspwep.Ammo = 0;
+						uspwep.ReserveAmmo = 4;
+						PrintToChat(client, prefix ... "You bought a \x07USP \x01for \x06$%d\x01!", USPPrice.IntValue);
 					}
 					//Print if player doesn't have enough money
 					else{
@@ -833,9 +931,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= CZ75Price.IntValue){
 						p.Money -= CZ75Price.IntValue;
 						CWeapon czwep = GivePlayerWeapon(p, "weapon_cz75a");
-						czwep.Ammo = 6;
-						czwep.ReserveAmmo = 0;
-						PrintToChat(client, prefix ... "You bought a \x0BCZ75A \x01for \x06$%d\x01!", CZ75Price.IntValue);
+						czwep.Ammo = 0;
+						czwep.ReserveAmmo = 6;
+						PrintToChat(client, prefix ... "You bought a \x07CZ75A \x01for \x06$%d\x01!", CZ75Price.IntValue);
 					}
 					else{
 						PrintToChat(client, prefix ... nomoney);
@@ -847,9 +945,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= DeaglePrice.IntValue){
 						p.Money -= DeaglePrice.IntValue;
 						CWeapon dgwep = GivePlayerWeapon(p, "weapon_deagle");
-						dgwep.Ammo = 1;
-						dgwep.ReserveAmmo = 0;
-						PrintToChat(client, prefix ... "You bought a \x0BDeagle \x01for \x06$%d\x01!", DeaglePrice.IntValue);
+						dgwep.Ammo = 0;
+						dgwep.ReserveAmmo = 2;
+						PrintToChat(client, prefix ... "You bought a \x07Deagle \x01for \x06$%d\x01!", DeaglePrice.IntValue);
 					}
 					else{
 						PrintToChat(client, prefix ... nomoney);
@@ -861,9 +959,9 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 					if(p.Money >= BumpyPrice.IntValue){
 						p.Money -= BumpyPrice.IntValue;
 						CWeapon r8wep = GivePlayerWeapon(p, "weapon_revolver");
-						r8wep.Ammo = 1;
-						r8wep.ReserveAmmo = 0;
-						PrintToChat(client, prefix ... "You bought a \x0BRevolver \x01for \x06$%d\x01!", BumpyPrice.IntValue);
+						r8wep.Ammo = 0;
+						r8wep.ReserveAmmo = 2;
+						PrintToChat(client, prefix ... "You bought a \x07Revolver \x01for \x06$%d\x01!", BumpyPrice.IntValue);
 						PrintToConsole(client, "bumpy bumpy");
 					}
 					else{
@@ -875,6 +973,107 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum)
 			else
 			{
 				PrintToChat(client, prefix ... "You already have a secondary!");
+			}
+		}
+		else{
+			PrintToChat(client, prefix..."You must be alive to use the cash shop!");
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+}
+
+public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum)
+{
+	if (action == MenuAction_Select)
+	{
+		CCSPlayer p = CCSPlayer(client);
+		if(p.Alive){
+			char info[32], display[64];
+			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+			//Check if player's primary slot is empty
+			if(p.GetWeapon(CS_SLOT_PRIMARY).IsNull){
+				//Check if bizon is selected
+				if (StrEqual(info, "weapon_bizon"))
+				{
+					//Check if player has enough money
+					if(p.Money >= BizonPrice.IntValue){
+						p.Money -= BizonPrice.IntValue;
+						CWeapon ppwep = GivePlayerWeapon(p, "weapon_bizon");
+						ppwep.Ammo = 0;
+						ppwep.ReserveAmmo = 32;
+						PrintToChat(client, prefix ... "You bought a \x07Bizon \x01for \x06$%d\x01!", BizonPrice.IntValue);
+					}
+					//Print if player doesn't have enough money
+					else{
+						PrintToChat(client, prefix ... nomoney);
+					}
+				}
+				//Check if mp9 is selected
+				else if (StrEqual(info, "weapon_mp9"))
+				{
+					//Check if player has enough money
+					if(p.Money >= MP9Price.IntValue){
+						p.Money -= MP9Price.IntValue;
+						CWeapon mp9wep = GivePlayerWeapon(p, "weapon_mp9");
+						mp9wep.Ammo = 0;
+						mp9wep.ReserveAmmo = 20;
+						PrintToChat(client, prefix ... "You bought a \x07MP9 \x01for \x06$%d\x01!", MP9Price.IntValue);
+					}
+					//Print if player doesn't have enough money
+					else{
+						PrintToChat(client, prefix ... nomoney);
+					}
+				}
+				//Check if negev is selected
+				else if (StrEqual(info, "weapon_negev"))
+				{
+					if(p.Money >= NegevPrice.IntValue){
+						p.Money -= NegevPrice.IntValue;
+						CWeapon negevwep = GivePlayerWeapon(p, "weapon_negev");
+						negevwep.Ammo = 0;
+						negevwep.ReserveAmmo = 30;
+						PrintToChat(client, prefix ... "You bought a \x07Negev \x01for \x06$%d\x01!", NegevPrice.IntValue);
+					}
+					else{
+						PrintToChat(client, prefix ... nomoney);
+					}
+				}
+				//Check if famas is selected
+				else if (StrEqual(info, "weapon_famas"))
+				{
+					if(p.Money >= FamasPrice.IntValue){
+						p.Money -= FamasPrice.IntValue;
+						CWeapon famaswep = GivePlayerWeapon(p, "weapon_famas");
+						famaswep.Ammo = 0;
+						famaswep.ReserveAmmo = 15;
+						PrintToChat(client, prefix ... "You bought a \x07Famas \x01for \x06$%d\x01!", FamasPrice.IntValue);
+					}
+					else{
+						PrintToChat(client, prefix ... nomoney);
+					}
+				}
+				//Check if scout is selected
+				else if (StrEqual(info, "weapon_ssg08"))
+				{
+					if(p.Money >= ScoutPrice.IntValue){
+						p.Money -= ScoutPrice.IntValue;
+						CWeapon scoutwep = GivePlayerWeapon(p, "weapon_ssg08");
+						scoutwep.Ammo = 0;
+						scoutwep.ReserveAmmo = 5;
+						PrintToChat(client, prefix ... "You bought a \x07SSG08 \x01for \x06$%d\x01!", ScoutPrice.IntValue);
+					}
+					else{
+						PrintToChat(client, prefix ... nomoney);
+					}
+				}
+			}
+			//Print if player already has a primary
+			else
+			{
+				PrintToChat(client, prefix ... "You already have a primary!");
 			}
 		}
 		else{
