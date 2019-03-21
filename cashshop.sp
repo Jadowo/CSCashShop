@@ -16,7 +16,7 @@
 
 
 public Plugin myinfo = {
-	name = "Cash Shop",
+	name = "[xG] Cash Shop",
 	author = "Jadow",
 	description = "Use in game money to buy things",
 	version = "1.1",
@@ -52,6 +52,10 @@ ConVar BodyArmor10Toggle;
 ConVar BodyArmor15Toggle;
 ConVar BodyArmor20Toggle;
 ConVar BodyArmor25Toggle;
+ConVar SpeedToggle;
+ConVar LowGravToggle;
+ConVar HPToggle;
+
 ConVar FlashbangPrice;
 ConVar SmokePrice;
 ConVar DecoyPrice;
@@ -86,6 +90,7 @@ ConVar BodyArmorToggle;
 ConVar PistolsToggle;
 ConVar CashShopToggle;
 ConVar PrimaryToggle;
+ConVar UpgradeToggle;
 ConVar GlockAmmo;
 ConVar GlockReserveAmmo;
 ConVar USPAmmo;
@@ -106,8 +111,9 @@ ConVar NegevAmmo;
 ConVar NegevReserveAmmo;
 ConVar ScoutAmmo;
 ConVar ScoutReserveAmmo;
-
-
+ConVar SpeedPrice;
+ConVar LowGravPrice;
+ConVar HPPrice;
 
 public void OnPluginStart(){
 	
@@ -148,6 +154,10 @@ public void OnPluginStart(){
 	BodyArmor15Price = CreateConVar("sm_cashshop_price_armor15", "6200",  "Price of Armor +15");
 	BodyArmor20Price = CreateConVar("sm_cashshop_price_armor20", "7400",  "Price of Armor +20");
 	BodyArmor25Price = CreateConVar("sm_cashshop_price_armor25", "8600",  "Price of Armor +25");
+	//Upgrades
+	SpeedPrice = CreateConVar("sm_cashshop_price_speed", "30000",  "Price of Speed +10%");
+	LowGravPrice = CreateConVar("sm_cashshop_price_lowgrav", "30000",  "Price of LowGrav +10%");
+	HPPrice = CreateConVar("sm_cashshop_price_hp", "30000",  "Price of HP +10%");
 	
 	//Tactical Grenade
 	FlashbangToggle = CreateConVar("sm_cashshop_toggle_flashbang", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -182,6 +192,11 @@ public void OnPluginStart(){
 	BodyArmor15Toggle = CreateConVar("sm_cashshop_toggle_armor15", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor20Toggle = CreateConVar("sm_cashshop_toggle_armor20", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor25Toggle = CreateConVar("sm_cashshop_toggle_armor25", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	//Upgrades
+	SpeedToggle = CreateConVar("sm_cashshop_toggle_speed", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	LowGravToggle = CreateConVar("sm_cashshop_toggle_speed", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	HPToggle = CreateConVar("sm_cashshop_toggle_speed", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	
 	
 	//Menus
 	CashShopToggle = CreateConVar("sm_cashshop_toggle_all", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -191,6 +206,7 @@ public void OnPluginStart(){
 	HeavyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_heavy", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_body", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	PistolsToggle = CreateConVar("sm_cashshop_toggle_pistols", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	UpgradeToggle = CreateConVar("sm_cashshop_toggle_upgrade", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	//Ammo
 	GlockAmmo = CreateConVar("sm_cashshop_ammo_glock", "0", "Ammo In Glock Magazine", _, true, 0.0, true, 20.0);
@@ -230,6 +246,10 @@ public Action Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadca
 		if(p.InGame && p.Team == CS_TEAM_CT){
 			p.HeavyArmor = false;
 		}
+		if((p.InGame && p.Team == CS_TEAM_CT)||(p.InGame && p.Team == CS_TEAM_T)){
+			p.Speed = 1.0;
+			p.Gravity = 1.0;
+		}
 	}
 }
 
@@ -257,6 +277,10 @@ public Action Command_CashShop(int client, int args){
 				//Check if heavy armor is enabled
 				if(HeavyArmorToggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmorToggle.IntValue == SHOP_ITEM_ENABLED){
 					menu.AddItem("harmor", "Heavy Armor");
+				}
+				//Check if upgarde is enabled
+				if(UpgradeToggle.IntValue == SHOP_ITEM_CT_ONLY || UpgradeToggle.IntValue == SHOP_ITEM_ENABLED){
+					menu.AddItem("upgrades", "Upgrades");
 				}
 				menu.Display(client, MENU_TIME_FOREVER);
 				return Plugin_Handled;
@@ -287,6 +311,10 @@ public Action Command_CashShop(int client, int args){
 				//Check if body armor is enabled
 				if(BodyArmorToggle.IntValue >= SHOP_ITEM_T_ONLY){
 					menu.AddItem("barmor", "Body Armor");
+				}
+				//Check if upgarde is enabled
+				if(UpgradeToggle.IntValue >= SHOP_ITEM_T_ONLY){
+					menu.AddItem("upgrades", "Upgrades");
 				}
 				menu.Display(client, MENU_TIME_FOREVER);
 				return Plugin_Handled;
@@ -402,7 +430,7 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 				//Check if heavyarmor10 is enabled
 				if(HeavyArmor10Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor10Toggle.IntValue == SHOP_ITEM_ENABLED){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 10 Heavy Armor", HeavyArmor10Price.IntValue);
-					hamenu.AddItem("ha15", displayprice);
+					hamenu.AddItem("ha10", displayprice);
 				}
 				if(HeavyArmor15Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor15Toggle.IntValue == SHOP_ITEM_ENABLED){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 15 Heavy Armor", HeavyArmor15Price.IntValue);
@@ -421,6 +449,27 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 					hamenu.AddItem("ha100", displayprice);
 				}
 				hamenu.Display(client, MENU_TIME_FOREVER);
+			}
+			//check if upgrade is selected
+			else if (StrEqual(info, "upgrades")){
+				Menu upmenu = new Menu(Menu_Upgrades);
+				upmenu.SetTitle("Upgrades");
+				//Check if speed is enabled
+				if(SpeedToggle.IntValue == SHOP_ITEM_CT_ONLY || SpeedToggle.IntValue == SHOP_ITEM_ENABLED){
+					Format(displayprice, sizeof(displayprice), "($%d)+5% Speed", SpeedPrice.IntValue);
+					upmenu.AddItem("speed", displayprice);
+				}
+				//CHeck if lowgrav is enabled
+				if(LowGravToggle.IntValue == SHOP_ITEM_CT_ONLY || LowGravToggle.IntValue == SHOP_ITEM_ENABLED){
+					Format(displayprice, sizeof(displayprice), "($%d)-5% Gravity", LowGravPrice.IntValue);
+					upmenu.AddItem("lowgrav", displayprice);
+				}
+				//CHeck if health is enabled
+				if(HPToggle.IntValue == SHOP_ITEM_CT_ONLY || HPToggle.IntValue == SHOP_ITEM_ENABLED){
+					Format(displayprice, sizeof(displayprice), "($%d)+15 HP", HPPrice.IntValue);
+					upmenu.AddItem("health", displayprice);
+				}
+				upmenu.Display(client, MENU_TIME_FOREVER);
 			}
 		}
 		else{
@@ -523,7 +572,7 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 				}
 				bamenu.Display(client, MENU_TIME_FOREVER);
 			}
-			//Check if pitols is selected
+			//Check if pistols is selected
 			else if(StrEqual(info, "pistols")){
 				Menu pmenu = new Menu(Menu_Pistols);
 				pmenu.SetTitle("Pistols");
@@ -552,6 +601,27 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 					pmenu.AddItem("weapon_revolver", displayprice);
 				}
 				pmenu.Display(client, MENU_TIME_FOREVER);
+			}
+			//check if upgrade is selected
+			else if (StrEqual(info, "upgrades")){
+				Menu upmenu = new Menu(Menu_Upgrades);
+				upmenu.SetTitle("Upgrades");
+				//Check if speed is enabled
+				if(SpeedToggle.IntValue == SHOP_ITEM_CT_ONLY || SpeedToggle.IntValue == SHOP_ITEM_ENABLED){
+					Format(displayprice, sizeof(displayprice), "($%d)+5% Speed", SpeedPrice.IntValue);
+					upmenu.AddItem("speed", displayprice);
+				}
+				//CHeck if lowgrav is enabled
+				if(LowGravToggle.IntValue == SHOP_ITEM_CT_ONLY || LowGravToggle.IntValue == SHOP_ITEM_ENABLED){
+					Format(displayprice, sizeof(displayprice), "($%d)-5% Gravity", LowGravPrice.IntValue);
+					upmenu.AddItem("lowgrav", displayprice);
+				}
+				//CHeck if health is enabled
+				if(HPToggle.IntValue == SHOP_ITEM_CT_ONLY || HPToggle.IntValue == SHOP_ITEM_ENABLED){
+					Format(displayprice, sizeof(displayprice), "($%d)+15 HP", HPPrice.IntValue);
+					upmenu.AddItem("health", displayprice);
+				}
+				upmenu.Display(client, MENU_TIME_FOREVER);
 			}
 		}
 		else{
@@ -1040,6 +1110,60 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 			//Print if player already has a primary
 			else{
 				PrintToChat(client, prefix ... "You already have a \x07primary\x01!");
+			}
+		}
+		else{
+			PrintToChat(client, prefix..."You must be alive to use the \x06CashShop\x01!");
+		}
+	}
+	else if (action == MenuAction_End){
+		delete menu;
+	}
+}
+
+public int Menu_Upgrades(Menu menu, MenuAction action, int client, int itemNum){
+	if (action == MenuAction_Select){
+		CCSPlayer p = CCSPlayer(client);
+		if(p.Alive){
+			char info[32], display[64];
+			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
+			//Check if speed is selected
+			if (StrEqual(info, "speed")){
+				//Check if player has enough money
+				if(p.Money >= SpeedPrice.IntValue){
+					p.Money -= SpeedPrice.IntValue;
+					p.Speed = p.Speed * 1.05;
+					PrintToChat(client, prefix ... "You bought \x07+5% Speed \x01for \x06$%d\x01!", SpeedPrice.IntValue);
+				}
+				//Print if player doesn't have enough money
+				else{
+					PrintToChat(client, prefix ... nomoney);
+				}
+			}
+			//Check if lowgrav is selected
+			else if (StrEqual(info, "lowgrav")){
+				//Check if player has enough money
+				if(p.Money >= LowGravPrice.IntValue){
+					p.Money -= LowGravPrice.IntValue;
+					p.Gravity = p.Gravity * 0.95;
+					PrintToChat(client, prefix ... "You bought \x07-5% Gravity \x01for \x06$%d\x01!", LowGravPrice.IntValue);
+				}
+				//Print if player doesn't have enough money
+				else{
+					PrintToChat(client, prefix ... nomoney);
+				}
+			}
+			else if (StrEqual(info, "health")){
+				//Check if player has enough money
+				if(p.Money >= HPPrice.IntValue){
+					p.Money -= HPPrice.IntValue;
+					p.Health = p.Health + 15;
+					PrintToChat(client, prefix ... "You bought \x07+15 Health \x01for \x06$%d\x01!", HPPrice.IntValue);
+				}
+				//Print if player doesn't have enough money
+				else{
+					PrintToChat(client, prefix ... nomoney);
+				}
 			}
 		}
 		else{
