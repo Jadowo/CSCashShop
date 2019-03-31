@@ -246,10 +246,6 @@ public Action Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadca
 		if(p.InGame && p.Team == CS_TEAM_CT){
 			p.HeavyArmor = false;
 		}
-		if((p.InGame && p.Team == CS_TEAM_CT)||(p.InGame && p.Team == CS_TEAM_T)){
-			p.Speed = 1.0;
-			p.Gravity = 1.0;
-		}
 	}
 }
 
