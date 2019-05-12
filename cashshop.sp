@@ -51,9 +51,10 @@ ConVar BodyArmor10Toggle;
 ConVar BodyArmor15Toggle;
 ConVar BodyArmor20Toggle;
 ConVar BodyArmor25Toggle;
-ConVar SpeedToggle;
-ConVar LowGravToggle;
-ConVar HPToggle;
+ConVar ExoBootsToggle;
+ConVar BumpMineToggle;
+ConVar ShieldToggle;
+ConVar DroneToggle;
 
 ConVar FlashbangPrice;
 ConVar SmokePrice;
@@ -82,6 +83,11 @@ ConVar BodyArmor10Price;
 ConVar BodyArmor15Price;
 ConVar BodyArmor20Price;
 ConVar BodyArmor25Price;
+ConVar ExoBootsPrice;
+ConVar BumpMinePrice;
+ConVar ShieldPrice;
+ConVar DronePrice;
+
 ConVar TactNadesToggle;
 ConVar OffNadesToggle;
 ConVar HeavyArmorToggle;
@@ -89,7 +95,7 @@ ConVar BodyArmorToggle;
 ConVar PistolsToggle;
 ConVar CashShopToggle;
 ConVar PrimaryToggle;
-ConVar UpgradeToggle;
+ConVar MiscellaneousToggle;
 ConVar GlockAmmo;
 ConVar GlockReserveAmmo;
 ConVar USPAmmo;
@@ -110,9 +116,6 @@ ConVar NegevAmmo;
 ConVar NegevReserveAmmo;
 ConVar ScoutAmmo;
 ConVar ScoutReserveAmmo;
-ConVar SpeedPrice;
-ConVar LowGravPrice;
-ConVar HPPrice;
 
 public void OnPluginStart(){
 	
@@ -153,10 +156,11 @@ public void OnPluginStart(){
 	BodyArmor15Price = CreateConVar("sm_cashshop_price_armor15", "6200",  "Price of Armor +15");
 	BodyArmor20Price = CreateConVar("sm_cashshop_price_armor20", "7400",  "Price of Armor +20");
 	BodyArmor25Price = CreateConVar("sm_cashshop_price_armor25", "8600",  "Price of Armor +25");
-	//Upgrades
-	SpeedPrice = CreateConVar("sm_cashshop_price_speed", "30000",  "Price of Speed +10%");
-	LowGravPrice = CreateConVar("sm_cashshop_price_lowgrav", "30000",  "Price of LowGrav +10%");
-	HPPrice = CreateConVar("sm_cashshop_price_hp", "30000",  "Price of HP +10%");
+	//Miscellaneous
+	ExoBootsPrice = CreateConVar("sm_cashshop_price_exoboots", "20000",  "Price of Exoboots");
+	BumpMinePrice = CreateConVar("sm_cashshop_price_bumpmine", "6000",  "Price of BumpMine");
+	ShieldPrice = CreateConVar("sm_cashshop_price_shield", "10000",  "Price of Shield");
+	DronePrice = CreateConVar("sm_cashshop_price_drone", "10000",  "Price of Drone");
 	
 	//Tactical Grenade
 	FlashbangToggle = CreateConVar("sm_cashshop_toggle_flashbang", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -192,9 +196,10 @@ public void OnPluginStart(){
 	BodyArmor20Toggle = CreateConVar("sm_cashshop_toggle_armor20", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmor25Toggle = CreateConVar("sm_cashshop_toggle_armor25", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	//Upgrades
-	SpeedToggle = CreateConVar("sm_cashshop_toggle_speed", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	LowGravToggle = CreateConVar("sm_cashshop_toggle_speed", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	HPToggle = CreateConVar("sm_cashshop_toggle_speed", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	ExoBootsToggle = CreateConVar("sm_cashshop_toggle_exoboots", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	BumpMineToggle = CreateConVar("sm_cashshop_toggle_bumpmine", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	ShieldToggle = CreateConVar("sm_cashshop_toggle_shield", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	DroneToggle = CreateConVar("sm_cashshop_toggle_drone", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	//Menus
 	CashShopToggle = CreateConVar("sm_cashshop_toggle_all", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -204,7 +209,7 @@ public void OnPluginStart(){
 	HeavyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_heavy", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BodyArmorToggle = CreateConVar("sm_cashshop_toggle_armor_body", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	PistolsToggle = CreateConVar("sm_cashshop_toggle_pistols", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	UpgradeToggle = CreateConVar("sm_cashshop_toggle_upgrade", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
+	MiscellaneousToggle = CreateConVar("sm_cashshop_toggle_upgrade", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	//Ammo
 	GlockAmmo = CreateConVar("sm_cashshop_ammo_glock", "0", "Ammo In Glock Magazine", _, true, 0.0, true, 20.0);
@@ -240,10 +245,12 @@ public void OnMapStart(){
 
 public Action Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadcast){
 	// Removing Heavy Armor when round ends
+	
 	CCSPlayer p;
 	while(CCSPlayer.Next(p)){
 		if(p.InGame){
 			p.HeavyArmor = false;
+			SetEntProp(p.Index, Prop_Send, "m_passiveItems", 0, 1, 1);
 		}
 	}
 }
@@ -272,9 +279,9 @@ public Action Command_CashShop(int client, int args){
 			if(HeavyArmorToggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmorToggle.IntValue == SHOP_ITEM_ENABLED){
 				menu.AddItem("harmor", "Heavy Armor");
 			}
-			//Check if upgarde is enabled
-			if(UpgradeToggle.IntValue == SHOP_ITEM_CT_ONLY || UpgradeToggle.IntValue == SHOP_ITEM_ENABLED){
-				menu.AddItem("upgrades", "Upgrades");
+			//Check if miscellaneous is enabled
+			if(MiscellaneousToggle.IntValue == SHOP_ITEM_CT_ONLY || MiscellaneousToggle.IntValue == SHOP_ITEM_ENABLED){
+				menu.AddItem("miscellaneous", "Miscellaneous");
 			}
 			menu.Display(client, MENU_TIME_FOREVER);
 			return Plugin_Handled;
@@ -306,9 +313,9 @@ public Action Command_CashShop(int client, int args){
 			if(BodyArmorToggle.IntValue >= SHOP_ITEM_T_ONLY){
 				menu.AddItem("barmor", "Body Armor");
 			}
-			//Check if upgarde is enabled
-			if(UpgradeToggle.IntValue >= SHOP_ITEM_T_ONLY){
-				menu.AddItem("upgrades", "Upgrades");
+			//Check if miscellaneous is enabled
+			if(MiscellaneousToggle.IntValue == SHOP_ITEM_CT_ONLY || MiscellaneousToggle.IntValue == SHOP_ITEM_ENABLED){
+				menu.AddItem("miscellaneous", "Miscellaneous");
 			}
 			menu.Display(client, MENU_TIME_FOREVER);
 			return Plugin_Handled;
@@ -440,23 +447,28 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 			hamenu.Display(client, MENU_TIME_FOREVER);
 		}
 		//check if upgrade is selected
-		else if (StrEqual(info, "upgrades")){
-			Menu upmenu = new Menu(Menu_Upgrades);
-			upmenu.SetTitle("Upgrades");
-			//Check if speed is enabled
-			if(SpeedToggle.IntValue == SHOP_ITEM_CT_ONLY || SpeedToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)+5% Speed", SpeedPrice.IntValue);
-				upmenu.AddItem("speed", displayprice);
+		else if (StrEqual(info, "miscellaneous")){
+			Menu upmenu = new Menu(Menu_Miscellaneous);
+			upmenu.SetTitle("Miscellaneous");
+			//Check if ExoBoots is enabled
+			if(ExoBootsToggle.IntValue == SHOP_ITEM_CT_ONLY || ExoBootsToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)ExoBoots", ExoBootsPrice.IntValue);
+				upmenu.AddItem("exoboots", displayprice);
 			}
-			//CHeck if lowgrav is enabled
-			if(LowGravToggle.IntValue == SHOP_ITEM_CT_ONLY || LowGravToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)-5% Gravity", LowGravPrice.IntValue);
-				upmenu.AddItem("lowgrav", displayprice);
+			//Check if BumpMine is enabled
+			if(BumpMineToggle.IntValue == SHOP_ITEM_CT_ONLY || BumpMineToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)Bump Mine", BumpMinePrice.IntValue);
+				upmenu.AddItem("bumpmine", displayprice);
 			}
-			//CHeck if health is enabled
-			if(HPToggle.IntValue == SHOP_ITEM_CT_ONLY || HPToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)+15 HP", HPPrice.IntValue);
-				upmenu.AddItem("health", displayprice);
+			//Check if Shield is enabled
+			if(ShieldToggle.IntValue == SHOP_ITEM_CT_ONLY || ShieldToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)Shield", ShieldPrice.IntValue);
+				upmenu.AddItem("shield", displayprice);
+			}
+			//Check if Drone is enabled
+			if(DroneToggle.IntValue == SHOP_ITEM_CT_ONLY || DroneToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)Drone", DronePrice.IntValue);
+				upmenu.AddItem("drone", displayprice);
 			}
 			upmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -464,7 +476,7 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -590,23 +602,28 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 			pmenu.Display(client, MENU_TIME_FOREVER);
 		}
 		//check if upgrade is selected
-		else if (StrEqual(info, "upgrades")){
-			Menu upmenu = new Menu(Menu_Upgrades);
-			upmenu.SetTitle("Upgrades");
-			//Check if speed is enabled
-			if(SpeedToggle.IntValue == SHOP_ITEM_CT_ONLY || SpeedToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)+5% Speed", SpeedPrice.IntValue);
-				upmenu.AddItem("speed", displayprice);
+		else if (StrEqual(info, "miscellaneous")){
+			Menu upmenu = new Menu(Menu_Miscellaneous);
+			upmenu.SetTitle("Miscellaneous");
+			//Check if ExoBoots is enabled
+			if(ExoBootsToggle.IntValue == SHOP_ITEM_CT_ONLY || ExoBootsToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)ExoBoots", ExoBootsPrice.IntValue);
+				upmenu.AddItem("exoboots", displayprice);
 			}
-			//CHeck if lowgrav is enabled
-			if(LowGravToggle.IntValue == SHOP_ITEM_CT_ONLY || LowGravToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)-5% Gravity", LowGravPrice.IntValue);
-				upmenu.AddItem("lowgrav", displayprice);
+			//Check if BumpMine is enabled
+			if(BumpMineToggle.IntValue == SHOP_ITEM_CT_ONLY || BumpMineToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)Bump Mine", BumpMinePrice.IntValue);
+				upmenu.AddItem("bumpmine", displayprice);
 			}
-			//CHeck if health is enabled
-			if(HPToggle.IntValue == SHOP_ITEM_CT_ONLY || HPToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)+15 HP", HPPrice.IntValue);
-				upmenu.AddItem("health", displayprice);
+			//Check if Shield is enabled
+			if(ShieldToggle.IntValue == SHOP_ITEM_CT_ONLY || ShieldToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)Shield", ShieldPrice.IntValue);
+				upmenu.AddItem("shield", displayprice);
+			}
+			//Check if Drone is enabled
+			if(DroneToggle.IntValue == SHOP_ITEM_CT_ONLY || DroneToggle.IntValue == SHOP_ITEM_ENABLED){
+				Format(displayprice, sizeof(displayprice), "($%d)Drone", DronePrice.IntValue);
+				upmenu.AddItem("drone", displayprice);
 			}
 			upmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -614,7 +631,7 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -685,7 +702,7 @@ public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum)
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -735,7 +752,7 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum){
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -844,7 +861,7 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -909,7 +926,7 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -1000,7 +1017,7 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
@@ -1090,59 +1107,68 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
 
-public int Menu_Upgrades(Menu menu, MenuAction action, int client, int itemNum){
+public int Menu_Miscellaneous(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
 	if (p.Alive && action == MenuAction_Select){
 		char info[32], display[64];
 		menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
-		//Check if speed is selected
-		if (StrEqual(info, "speed")){
+		if (StrEqual(info, "exoboots")){
 			//Check if player has enough money
-			if(p.Money >= SpeedPrice.IntValue){
-				p.Money -= SpeedPrice.IntValue;
-				p.Speed = p.Speed * 1.05;
-				PrintToChat(client, prefix ... "You bought \x07+5% Speed \x01for \x06$%d\x01!", SpeedPrice.IntValue);
+			if(p.Money >= ExoBootsPrice.IntValue){
+				p.Money -= ExoBootsPrice.IntValue;
+				SetEntProp(client, Prop_Send, "m_passiveItems", 1, 1, 1);
+				PrintToChat(client, prefix ... "You bought \x07 ExoBoots \x01for \x06$%d\x01!", ExoBootsPrice.IntValue);
 			}
 			//Print if player doesn't have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
-		//Check if lowgrav is selected
-		else if (StrEqual(info, "lowgrav")){
+		else if (StrEqual(info, "bumpmine")){
 			//Check if player has enough money
-			if(p.Money >= LowGravPrice.IntValue){
-				p.Money -= LowGravPrice.IntValue;
-				p.Gravity = p.Gravity * 0.95;
-				PrintToChat(client, prefix ... "You bought \x07-5% Gravity \x01for \x06$%d\x01!", LowGravPrice.IntValue);
+			if(p.Money >= BumpMinePrice.IntValue){
+				p.Money -= BumpMinePrice.IntValue;
+				GivePlayerWeapon(p, "weapon_bumpmine");
+				PrintToChat(client, prefix ... "You bought 3 \x07Bump Mines \x01for \x06$%d\x01!", BumpMinePrice.IntValue);
 			}
 			//Print if player doesn't have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
 		}
-		else if (StrEqual(info, "health")){
+		else if (StrEqual(info, "shield")){
 			//Check if player has enough money
-			if(p.Money >= HPPrice.IntValue){
-				p.Money -= HPPrice.IntValue;
-				p.Health = p.Health + 15;
-				PrintToChat(client, prefix ... "You bought \x07+15 Health \x01for \x06$%d\x01!", HPPrice.IntValue);
+			if(p.Money >= ShieldPrice.IntValue){
+				p.Money -= ShieldPrice.IntValue;
+				GivePlayerWeapon(p, "weapon_shield");
+				PrintToChat(client, prefix ... "You bought a \x07Shield \x01for \x06$%d\x01!", ShieldPrice.IntValue);
 			}
 			//Print if player doesn't have enough money
 			else{
 				PrintToChat(client, prefix ... nomoney);
 			}
+		}
+		else if (StrEqual(info, "drone")){
+			//Check if player has enough money
+			if(p.Money >= DronePrice.IntValue){
+				p.Money -= DronePrice.IntValue;
+				PrintToChat(client, prefix ... "You bought a \x07Drone \x01for \x06$%d\x01!", DronePrice.IntValue);
 			}
+			//Print if player doesn't have enough money
+			else{
+				PrintToChat(client, prefix ... nomoney);
+			}
+		}
 	}
 	else if (p.Alive && action == MenuAction_End){
 		delete menu;
 	}
-	else{
+	else if (!p.Alive){
 		PrintToChat(client, prefix..."You must be alive to use the cash shop!");
 	}
 }
