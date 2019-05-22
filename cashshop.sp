@@ -10,10 +10,11 @@
 #define NOMONEY "You don't have enough \x06money\x01!"
 #define DISABLE "The Cash Shop is currently \x07disabled\x01!"
 #define ALIVE "You must be /x07alive /x01to use the cash shop!"
-#define SHOP_ITEM_DISABLED 0
-#define SHOP_ITEM_CT_ONLY 1
-#define SHOP_ITEM_T_ONLY 2
-#define SHOP_ITEM_ENABLED 3
+enum ShopItemStatus{
+	SHOP_ITEM_CT_ONLY = 1,
+	SHOP_ITEM_T_ONLY,
+	SHOP_ITEM_ENABLED
+};
 
 public Plugin myinfo = {
 	name = "[xG] Cash Shop",
@@ -276,22 +277,22 @@ public Action Command_CashShop(int client, int args){
 	CCSPlayer p = CCSPlayer(client);
 	if(p.Alive){
 		if (CS_TEAM_CT == p.Team){
-			if(CashShopToggle.IntValue == SHOP_ITEM_CT_ONLY || CashShopToggle.IntValue == SHOP_ITEM_ENABLED){
+			if(CashShopToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || CashShopToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 				Menu menu = new Menu(Menu_CTShop);
 				menu.SetTitle("Cash Shop");
-				if(TactNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || TactNadesToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(TactNadesToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || TactNadesToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					menu.AddItem("tactnades", "Tactical Grenade");
 				}
-				if(PrimaryToggle.IntValue == SHOP_ITEM_CT_ONLY || PrimaryToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(PrimaryToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || PrimaryToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					menu.AddItem("primary", "Primaries");
 				}
-				if(OffNadesToggle.IntValue == SHOP_ITEM_CT_ONLY || OffNadesToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(OffNadesToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || OffNadesToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					menu.AddItem("offnade", "Offensive Utility");
 				}
-				if(HeavyArmorToggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmorToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HeavyArmorToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HeavyArmorToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					menu.AddItem("harmor", "Heavy Armor");
 				}
-				if(MiscellaneousToggle.IntValue == SHOP_ITEM_CT_ONLY || MiscellaneousToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(MiscellaneousToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || MiscellaneousToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					menu.AddItem("miscellaneous", "Miscellaneous");
 				}
 				menu.Display(client, MENU_TIME_FOREVER);
@@ -302,22 +303,22 @@ public Action Command_CashShop(int client, int args){
 			}
 		}
 		else if(CS_TEAM_T == p.Team){
-			if(CashShopToggle.IntValue >= SHOP_ITEM_T_ONLY){
+			if(CashShopToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 				Menu menu = new Menu(Menu_TShop);
 				menu.SetTitle("Cash Shop");
-				if(TactNadesToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(TactNadesToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					menu.AddItem("tactnades", "Tactical Grenade");
 				}
-				if(PrimaryToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(PrimaryToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					menu.AddItem("primary", "Primaries");
 				}
-				if(PistolsToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(PistolsToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					menu.AddItem("pistols", "Pistols");
 				}
-				if(BodyArmorToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BodyArmorToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					menu.AddItem("barmor", "Body Armor");
 				}
-				if(MiscellaneousToggle.IntValue == SHOP_ITEM_CT_ONLY || MiscellaneousToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(MiscellaneousToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || MiscellaneousToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					menu.AddItem("miscellaneous", "Miscellaneous");
 				}
 				menu.Display(client, MENU_TIME_FOREVER);
@@ -343,23 +344,23 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 			if (StrEqual(info, "tactnades")){
 				Menu tnmenu = new Menu(Menu_TactNades);
 				tnmenu.SetTitle("Tactical Grenades");
-				if(FlashbangToggle.IntValue == SHOP_ITEM_CT_ONLY || FlashbangToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(FlashbangToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || FlashbangToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Flashbang", FlashbangPrice.IntValue);
 					tnmenu.AddItem("weapon_flashbang", displayprice);
 				}
-				if(SmokeToggle.IntValue == SHOP_ITEM_CT_ONLY || SmokeToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(SmokeToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || SmokeToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Smoke Grenade", SmokePrice.IntValue);
 					tnmenu.AddItem("weapon_smokegrenade", displayprice);
 				}
-				if(DecoyToggle.IntValue == SHOP_ITEM_CT_ONLY || DecoyToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(DecoyToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || DecoyToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Decoy Grenade", DecoyPrice.IntValue);
 					tnmenu.AddItem("weapon_decoy", displayprice);
 				}
-				if(TactAwareToggle.IntValue == SHOP_ITEM_CT_ONLY || TactAwareToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(TactAwareToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || TactAwareToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
 					tnmenu.AddItem("weapon_tagrenade", displayprice);
 				}
-				if(SnowballToggle.IntValue == SHOP_ITEM_CT_ONLY || SnowballToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(SnowballToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || SnowballToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Snowball", SnowballPrice.IntValue);
 					tnmenu.AddItem("weapon_snowball", displayprice);
 				}
@@ -368,23 +369,23 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "primary")){
 				Menu pmenu = new Menu(Menu_Primary);
 				pmenu.SetTitle("Primaries");
-				if(BizonToggle.IntValue == SHOP_ITEM_CT_ONLY || BizonToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(BizonToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || BizonToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Bizon", BizonPrice.IntValue);
 					pmenu.AddItem("weapon_bizon", displayprice);
 				}
-				if(MP9Toggle.IntValue == SHOP_ITEM_CT_ONLY || MP9Toggle.IntValue == SHOP_ITEM_ENABLED){
+				if(MP9Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || MP9Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)MP9", MP9Price.IntValue);
 					pmenu.AddItem("weapon_mp9", displayprice);
 				}
-				if(NegevToggle.IntValue == SHOP_ITEM_CT_ONLY || NegevToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(NegevToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || NegevToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Negev", NegevPrice.IntValue);
 					pmenu.AddItem("weapon_negev", displayprice);
 				}
-				if(FamasToggle.IntValue == SHOP_ITEM_CT_ONLY || FamasToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(FamasToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || FamasToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Famas", FamasPrice.IntValue);
 					pmenu.AddItem("weapon_famas", displayprice);
 				}
-				if(ScoutToggle.IntValue == SHOP_ITEM_CT_ONLY || ScoutToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(ScoutToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || ScoutToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)SSG08", ScoutPrice.IntValue);
 					pmenu.AddItem("weapon_ssg08", displayprice);
 				}
@@ -393,15 +394,15 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "offnade")){
 				Menu onmenu = new Menu(Menu_OffNades);
 				menu.SetTitle("Offensive Utility");
-				if(HEToggle.IntValue == SHOP_ITEM_CT_ONLY || HEToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HEToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HEToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)HE Grenade", HEPrice.IntValue);
 					onmenu.AddItem("weapon_hegrenade", displayprice);
 				}
-				if(MolotovToggle.IntValue == SHOP_ITEM_CT_ONLY || MolotovToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(MolotovToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || MolotovToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Molotov", MolotovPrice.IntValue);
 					onmenu.AddItem("weapon_molotov", displayprice);
 				}
-				if(BreachChargeToggle.IntValue == SHOP_ITEM_CT_ONLY || BreachChargeToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(BreachChargeToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || BreachChargeToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Breach Charge", BreachChargePrice.IntValue);
 					onmenu.AddItem("weapon_breachcharge", displayprice);
 				}
@@ -410,23 +411,23 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "harmor")){
 				Menu hamenu = new Menu(Menu_HeavyArmor);
 				hamenu.SetTitle("Heavy Armor");
-				if(HeavyArmor10Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor10Toggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HeavyArmor10Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HeavyArmor10Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 10 Heavy Armor", HeavyArmor10Price.IntValue);
 					hamenu.AddItem("ha10", displayprice);
 				}
-				if(HeavyArmor15Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor15Toggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HeavyArmor15Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HeavyArmor15Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 15 Heavy Armor", HeavyArmor15Price.IntValue);
 					hamenu.AddItem("ha15", displayprice);
 				}
-				if(HeavyArmor20Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor20Toggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HeavyArmor20Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HeavyArmor20Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 20 Heavy Armor", HeavyArmor20Price.IntValue);
 					hamenu.AddItem("ha20", displayprice);
 				}
-				if(HeavyArmor25Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor25Toggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HeavyArmor25Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HeavyArmor25Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 25 Heavy Armor", HeavyArmor25Price.IntValue);
 					hamenu.AddItem("ha25", displayprice);
 				}
-				if(HeavyArmor100Toggle.IntValue == SHOP_ITEM_CT_ONLY || HeavyArmor100Toggle.IntValue == SHOP_ITEM_ENABLED){
+				if(HeavyArmor100Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HeavyArmor100Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 100 Heavy Armor", HeavyArmor100Price.IntValue);
 					hamenu.AddItem("ha100", displayprice);
 				}
@@ -435,15 +436,15 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "miscellaneous")){
 				Menu upmenu = new Menu(Menu_Miscellaneous);
 				upmenu.SetTitle("Miscellaneous");
-				if(ExoBootsToggle.IntValue == SHOP_ITEM_CT_ONLY || ExoBootsToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(ExoBootsToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || ExoBootsToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)ExoBoots", ExoBootsPrice.IntValue);
 					upmenu.AddItem("exoboots", displayprice);
 				}
-				if(BumpMineToggle.IntValue == SHOP_ITEM_CT_ONLY || BumpMineToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(BumpMineToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || BumpMineToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Bump Mine", BumpMinePrice.IntValue);
 					upmenu.AddItem("bumpmine", displayprice);
 				}
-				if(ShieldToggle.IntValue == SHOP_ITEM_CT_ONLY || ShieldToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(ShieldToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || ShieldToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Riot Shield", ShieldPrice.IntValue);
 					upmenu.AddItem("shield", displayprice);
 				}
@@ -467,23 +468,23 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 			if (StrEqual(info, "tactnades")){
 				Menu tamenu = new Menu(Menu_TactNades);
 				menu.SetTitle("Tactical Grenades");
-				if(FlashbangToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(FlashbangToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Flashbang", FlashbangPrice.IntValue);
 					tamenu.AddItem("weapon_flashbang", displayprice);
 				}
-				if(SmokeToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(SmokeToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Smoke Grenade", SmokePrice.IntValue);
 					tamenu.AddItem("weapon_smokegrenade", displayprice);
 				}
-				if(DecoyToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(DecoyToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Decoy Grenade", DecoyPrice.IntValue);
 					tamenu.AddItem("weapon_decoy", displayprice);
 				}
-				if(TactAwareToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(TactAwareToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Tactical Awareness Grenade", TactAwarePrice.IntValue);
 					tamenu.AddItem("weapon_tagrenade", displayprice);
 				}
-				if(SnowballToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(SnowballToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Snowball", SnowballPrice.IntValue);
 					tamenu.AddItem("weapon_snowball", displayprice);
 				}
@@ -492,23 +493,23 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "primary")){
 				Menu pmenu = new Menu(Menu_Primary);
 				menu.SetTitle("Primaries");
-				if(BizonToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BizonToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Bizon", BizonPrice.IntValue);
 					pmenu.AddItem("weapon_bizon", displayprice);
 				}
-				if(MP9Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(MP9Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)MP9", MP9Price.IntValue);
 					pmenu.AddItem("weapon_mp9", displayprice);
 				}
-				if(NegevToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(NegevToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Negev", NegevPrice.IntValue);
 					pmenu.AddItem("weapon_negev", displayprice);
 				}
-				if(FamasToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(FamasToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Famas", FamasPrice.IntValue);
 					pmenu.AddItem("weapon_famas", displayprice);
 				}
-				if(ScoutToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(ScoutToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)SSG08", ScoutPrice.IntValue);
 					pmenu.AddItem("weapon_ssg08", displayprice);
 				}
@@ -517,19 +518,19 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "barmor")){
 				Menu bamenu = new Menu(Menu_BodyArmor);
 				menu.SetTitle("Armor");
-				if(BodyArmor10Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BodyArmor10Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 10 Body Armor", BodyArmor10Price.IntValue);
 					bamenu.AddItem("ba10", displayprice);
 				}
-				if(BodyArmor15Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BodyArmor15Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 15 Body Armor", BodyArmor15Price.IntValue);
 					bamenu.AddItem("ba15", displayprice);
 				}
-				if(BodyArmor20Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BodyArmor20Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 20 Body Armor", BodyArmor20Price.IntValue);
 					bamenu.AddItem("ba20", displayprice);
 				}
-				if(BodyArmor25Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BodyArmor25Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 25 Body Armor", BodyArmor25Price.IntValue);
 					bamenu.AddItem("ba25", displayprice);
 				}
@@ -538,23 +539,23 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if(StrEqual(info, "pistols")){
 				Menu pmenu = new Menu(Menu_Pistols);
 				pmenu.SetTitle("Pistols");
-				if(GlockToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(GlockToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Glock", GlockPrice.IntValue);
 					pmenu.AddItem("weapon_glock", displayprice);
 				}
-				if(USPToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(USPToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)USP", USPPrice.IntValue);
 					pmenu.AddItem("weapon_usp", displayprice);
 				}
-				if(CZ75Toggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(CZ75Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)CZ75A", CZ75Price.IntValue);
 					pmenu.AddItem("weapon_cz75a", displayprice);
 				}
-				if(DeagleToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(DeagleToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Deagle", DeaglePrice.IntValue);
 					pmenu.AddItem("weapon_deagle", displayprice);
 				}
-				if(BumpyToggle.IntValue >= SHOP_ITEM_T_ONLY){
+				if(BumpyToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Revolver", BumpyPrice.IntValue);
 					pmenu.AddItem("weapon_revolver", displayprice);
 				}
@@ -563,15 +564,15 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 			else if (StrEqual(info, "miscellaneous")){
 				Menu upmenu = new Menu(Menu_Miscellaneous);
 				upmenu.SetTitle("Miscellaneous");
-				if(ExoBootsToggle.IntValue == SHOP_ITEM_CT_ONLY || ExoBootsToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(ExoBootsToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || ExoBootsToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)ExoBoots", ExoBootsPrice.IntValue);
 					upmenu.AddItem("exoboots", displayprice);
 				}
-				if(BumpMineToggle.IntValue == SHOP_ITEM_CT_ONLY || BumpMineToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(BumpMineToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || BumpMineToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Bump Mine", BumpMinePrice.IntValue);
 					upmenu.AddItem("bumpmine", displayprice);
 				}
-				if(ShieldToggle.IntValue == SHOP_ITEM_CT_ONLY || ShieldToggle.IntValue == SHOP_ITEM_ENABLED){
+				if(ShieldToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || ShieldToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Riot Shield", ShieldPrice.IntValue);
 					upmenu.AddItem("shield", displayprice);
 				}
