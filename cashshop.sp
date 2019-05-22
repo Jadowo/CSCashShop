@@ -24,6 +24,8 @@ public Plugin myinfo = {
 }
 
 char displayprice[128];
+
+//Toggles
 ConVar FlashbangToggle;
 ConVar SmokeToggle;
 ConVar DecoyToggle;
@@ -54,8 +56,16 @@ ConVar BodyArmor25Toggle;
 ConVar ExoBootsToggle;
 ConVar BumpMineToggle;
 ConVar ShieldToggle;
-ConVar DroneToggle;
+ConVar TactNadesToggle;
+ConVar OffNadesToggle;
+ConVar HeavyArmorToggle;
+ConVar BodyArmorToggle;
+ConVar PistolsToggle;
+ConVar CashShopToggle;
+ConVar PrimaryToggle;
+ConVar MiscellaneousToggle;
 
+//Price
 ConVar FlashbangPrice;
 ConVar SmokePrice;
 ConVar DecoyPrice;
@@ -86,16 +96,8 @@ ConVar BodyArmor25Price;
 ConVar ExoBootsPrice;
 ConVar BumpMinePrice;
 ConVar ShieldPrice;
-ConVar DronePrice;
 
-ConVar TactNadesToggle;
-ConVar OffNadesToggle;
-ConVar HeavyArmorToggle;
-ConVar BodyArmorToggle;
-ConVar PistolsToggle;
-ConVar CashShopToggle;
-ConVar PrimaryToggle;
-ConVar MiscellaneousToggle;
+//Ammo
 ConVar GlockAmmo;
 ConVar GlockReserveAmmo;
 ConVar USPAmmo;
@@ -160,7 +162,6 @@ public void OnPluginStart(){
 	ExoBootsPrice = CreateConVar("sm_cashshop_price_exoboots", "20000",  "Price of Exoboots");
 	BumpMinePrice = CreateConVar("sm_cashshop_price_bumpmine", "6000",  "Price of BumpMine");
 	ShieldPrice = CreateConVar("sm_cashshop_price_shield", "10000",  "Price of Shield");
-	DronePrice = CreateConVar("sm_cashshop_price_drone", "10000",  "Price of Drone");
 	
 	//Tactical Grenade
 	FlashbangToggle = CreateConVar("sm_cashshop_toggle_flashbang", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -199,7 +200,6 @@ public void OnPluginStart(){
 	ExoBootsToggle = CreateConVar("sm_cashshop_toggle_exoboots", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	BumpMineToggle = CreateConVar("sm_cashshop_toggle_bumpmine", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	ShieldToggle = CreateConVar("sm_cashshop_toggle_shield", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
-	DroneToggle = CreateConVar("sm_cashshop_toggle_drone", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
 	
 	//Menus
 	CashShopToggle = CreateConVar("sm_cashshop_toggle_all", "3", "0 = Disabled, 1 = CT, 2 = T, 3 = Both", _, true, 0.0, true, 3.0);
@@ -465,12 +465,6 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 				Format(displayprice, sizeof(displayprice), "($%d)Shield", ShieldPrice.IntValue);
 				upmenu.AddItem("shield", displayprice);
 			}
-			//Check if Drone is enabled
-			if(DroneToggle.IntValue == SHOP_ITEM_CT_ONLY || DroneToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)Drone", DronePrice.IntValue);
-				upmenu.AddItem("drone", displayprice);
-			}
-			upmenu.Display(client, MENU_TIME_FOREVER);
 		}
 	}
 	else if (p.Alive && action == MenuAction_End){
@@ -620,12 +614,6 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 				Format(displayprice, sizeof(displayprice), "($%d)Shield", ShieldPrice.IntValue);
 				upmenu.AddItem("shield", displayprice);
 			}
-			//Check if Drone is enabled
-			if(DroneToggle.IntValue == SHOP_ITEM_CT_ONLY || DroneToggle.IntValue == SHOP_ITEM_ENABLED){
-				Format(displayprice, sizeof(displayprice), "($%d)Drone", DronePrice.IntValue);
-				upmenu.AddItem("drone", displayprice);
-			}
-			upmenu.Display(client, MENU_TIME_FOREVER);
 		}
 	}
 	else if (p.Alive && action == MenuAction_End){
@@ -1147,17 +1135,6 @@ public int Menu_Miscellaneous(Menu menu, MenuAction action, int client, int item
 				p.Money -= ShieldPrice.IntValue;
 				GivePlayerWeapon(p, "weapon_shield");
 				PrintToChat(client, prefix ... "You bought a \x07Shield \x01for \x06$%d\x01!", ShieldPrice.IntValue);
-			}
-			//Print if player doesn't have enough money
-			else{
-				PrintToChat(client, prefix ... nomoney);
-			}
-		}
-		else if (StrEqual(info, "drone")){
-			//Check if player has enough money
-			if(p.Money >= DronePrice.IntValue){
-				p.Money -= DronePrice.IntValue;
-				PrintToChat(client, prefix ... "You bought a \x07Drone \x01for \x06$%d\x01!", DronePrice.IntValue);
 			}
 			//Print if player doesn't have enough money
 			else{
