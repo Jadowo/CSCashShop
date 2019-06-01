@@ -6,10 +6,11 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PREFIX " \x0A[\x0Bx\x08G\x0A]\x01 "
 #define NOMONEY "You don't have enough \x06money\x01!"
 #define DISABLE "The Cash Shop is currently \x07disabled\x01!"
-#define ALIVE "You must be /x07alive /x01to use the cash shop!"
+#define ALIVE "You must be \x07alive \x01to use the cash shop!"
+#define XG_PREFIX_CHAT " \x0A[\x0Bx\x08G\x0A]\x01 "
+#define XG_PREFIX_CHAT_WARN " \x07[\x0Bx\x08G\x07]\x01 "
 enum ShopItemStatus{
 	SHOP_ITEM_CT_ONLY = 1,
 	SHOP_ITEM_T_ONLY,
@@ -299,7 +300,7 @@ public Action Command_CashShop(int client, int args){
 				return Plugin_Handled;
 			}
 			else{
-				PrintToChat(client, PREFIX...DISABLE);
+				PrintToChat(client, XG_PREFIX_CHAT_WARN...DISABLE);
 			}
 		}
 		else if(CS_TEAM_T == p.Team){
@@ -325,20 +326,20 @@ public Action Command_CashShop(int client, int args){
 				return Plugin_Handled;
 			}
 			else{
-				PrintToChat(client, PREFIX...DISABLE);
+				PrintToChat(client, XG_PREFIX_CHAT_WARN...DISABLE);
 			}
 		}
 	}
 	else{
-		PrintToChat(client, PREFIX...ALIVE);
+		PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 	}
 	return Plugin_Handled;
 }
 
 public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "tactnades")){
@@ -367,33 +368,33 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 				tnmenu.Display(client, MENU_TIME_FOREVER);
 			}
 			else if (StrEqual(info, "primary")){
-				Menu pmenu = new Menu(Menu_Primary);
-				pmenu.SetTitle("Primaries");
+				Menu primenu = new Menu(Menu_Primary);
+				primenu.SetTitle("Primaries");
 				if(BizonToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || BizonToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Bizon", BizonPrice.IntValue);
-					pmenu.AddItem("weapon_bizon", displayprice);
+					primenu.AddItem("weapon_bizon", displayprice);
 				}
 				if(MP9Toggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || MP9Toggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)MP9", MP9Price.IntValue);
-					pmenu.AddItem("weapon_mp9", displayprice);
+					primenu.AddItem("weapon_mp9", displayprice);
 				}
 				if(NegevToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || NegevToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Negev", NegevPrice.IntValue);
-					pmenu.AddItem("weapon_negev", displayprice);
+					primenu.AddItem("weapon_negev", displayprice);
 				}
 				if(FamasToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || FamasToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)Famas", FamasPrice.IntValue);
-					pmenu.AddItem("weapon_famas", displayprice);
+					primenu.AddItem("weapon_famas", displayprice);
 				}
 				if(ScoutToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || ScoutToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)SSG08", ScoutPrice.IntValue);
-					pmenu.AddItem("weapon_ssg08", displayprice);
+					primenu.AddItem("weapon_ssg08", displayprice);
 				}
-				pmenu.Display(client, MENU_TIME_FOREVER);
+				primenu.Display(client, MENU_TIME_FOREVER);
 			}
 			else if (StrEqual(info, "offnade")){
 				Menu onmenu = new Menu(Menu_OffNades);
-				menu.SetTitle("Offensive Utility");
+				onmenu.SetTitle("Offensive Utility");
 				if(HEToggle.IntValue == view_as<int>(SHOP_ITEM_CT_ONLY) || HEToggle.IntValue == view_as<int>(SHOP_ITEM_ENABLED)){
 					Format(displayprice, sizeof(displayprice), "($%d)HE Grenade", HEPrice.IntValue);
 					onmenu.AddItem("weapon_hegrenade", displayprice);
@@ -448,26 +449,27 @@ public int Menu_CTShop(Menu menu, MenuAction action, int client, int itemNum){
 					Format(displayprice, sizeof(displayprice), "($%d)Riot Shield", ShieldPrice.IntValue);
 					upmenu.AddItem("shield", displayprice);
 				}
+				upmenu.Display(client, MENU_TIME_FOREVER);
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
-		}
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	}
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "tactnades")){
 				Menu tamenu = new Menu(Menu_TactNades);
-				menu.SetTitle("Tactical Grenades");
+				tamenu.SetTitle("Tactical Grenades");
 				if(FlashbangToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Flashbang", FlashbangPrice.IntValue);
 					tamenu.AddItem("weapon_flashbang", displayprice);
@@ -491,33 +493,33 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 				tamenu.Display(client, MENU_TIME_FOREVER);
 			}
 			else if (StrEqual(info, "primary")){
-				Menu pmenu = new Menu(Menu_Primary);
-				menu.SetTitle("Primaries");
+				Menu primenu = new Menu(Menu_Primary);
+				primenu.SetTitle("Primaries");
 				if(BizonToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Bizon", BizonPrice.IntValue);
-					pmenu.AddItem("weapon_bizon", displayprice);
+					primenu.AddItem("weapon_bizon", displayprice);
 				}
 				if(MP9Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)MP9", MP9Price.IntValue);
-					pmenu.AddItem("weapon_mp9", displayprice);
+					primenu.AddItem("weapon_mp9", displayprice);
 				}
 				if(NegevToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Negev", NegevPrice.IntValue);
-					pmenu.AddItem("weapon_negev", displayprice);
+					primenu.AddItem("weapon_negev", displayprice);
 				}
 				if(FamasToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Famas", FamasPrice.IntValue);
-					pmenu.AddItem("weapon_famas", displayprice);
+					primenu.AddItem("weapon_famas", displayprice);
 				}
 				if(ScoutToggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)SSG08", ScoutPrice.IntValue);
-					pmenu.AddItem("weapon_ssg08", displayprice);
+					primenu.AddItem("weapon_ssg08", displayprice);
 				}
-				pmenu.Display(client, MENU_TIME_FOREVER);
+				primenu.Display(client, MENU_TIME_FOREVER);
 			}
 			else if (StrEqual(info, "barmor")){
 				Menu bamenu = new Menu(Menu_BodyArmor);
-				menu.SetTitle("Armor");
+				bamenu.SetTitle("Armor");
 				if(BodyArmor10Toggle.IntValue >= view_as<int>(SHOP_ITEM_T_ONLY)){
 					Format(displayprice, sizeof(displayprice), "($%d)Add 10 Body Armor", BodyArmor10Price.IntValue);
 					bamenu.AddItem("ba10", displayprice);
@@ -576,107 +578,108 @@ public int Menu_TShop(Menu menu, MenuAction action, int client, int itemNum){
 					Format(displayprice, sizeof(displayprice), "($%d)Riot Shield", ShieldPrice.IntValue);
 					upmenu.AddItem("shield", displayprice);
 				}
+				upmenu.Display(client, MENU_TIME_FOREVER);
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_TactNades(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "weapon_flashbang")){
 				if(p.Money >= FlashbangPrice.IntValue){
 					p.Money -= FlashbangPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_flashbang");
-					PrintToChat(client, PREFIX ... "You bought a \x0BFlashbang \x01for \x06$%d\x01!", FlashbangPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x0BFlashbang \x01for \x06$%d\x01!", FlashbangPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "weapon_smokegrenade")){
 				if(p.Money >= SmokePrice.IntValue){
 					p.Money -= SmokePrice.IntValue;
 					GivePlayerWeapon(p, "weapon_smokegrenade");
-					PrintToChat(client, PREFIX ... "You bought a \x0BSmoke Grenade \x01for \x06$%d\x01!", SmokePrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x0BSmoke Grenade \x01for \x06$%d\x01!", SmokePrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "weapon_decoy")){
 				if(p.Money >= DecoyPrice.IntValue){
 					p.Money -= DecoyPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_decoy");
-					PrintToChat(client, PREFIX ... "You bought a \x0BDecoy Grenade \x01for \x06$%d\x01!", DecoyPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x0BDecoy Grenade \x01for \x06$%d\x01!", DecoyPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "weapon_tagrenade")){
 				if(p.Money >= TactAwarePrice.IntValue){
 					p.Money -= TactAwarePrice.IntValue;
 					GivePlayerWeapon(p, "weapon_tagrenade");
-					PrintToChat(client, PREFIX ... "You bought a \x0BTactical Awareness Grenade \x01for \x06$%d\x01!", TactAwarePrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x0BTactical Awareness Grenade \x01for \x06$%d\x01!", TactAwarePrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "weapon_snowball")){
 				if(p.Money >= SnowballPrice.IntValue){
 					p.Money -= SnowballPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_snowball");
-					PrintToChat(client, PREFIX ... "You bought a \x0BSnowball \x01for \x06$%d\x01!", SnowballPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x0BSnowball \x01for \x06$%d\x01!", SnowballPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "weapon_hegrenade")){
 				if(p.Money >= HEPrice.IntValue){
 					p.Money -= HEPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_hegrenade");
-					PrintToChat(client, PREFIX ... "You bought a \x07HE Grenade \x01for \x06$%d\x01!", HEPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07HE Grenade \x01for \x06$%d\x01!", HEPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "weapon_molotov")){
 				if(p.Money >= MolotovPrice.IntValue){
 					p.Money -= MolotovPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_molotov");
-					PrintToChat(client, PREFIX ... "You bought a \x07Molotov \x01for \x06$%d\x01!", MolotovPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Molotov \x01for \x06$%d\x01!", MolotovPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "weapon_breachcharge")){
@@ -684,26 +687,26 @@ public int Menu_OffNades(Menu menu, MenuAction action, int client, int itemNum){
 					p.Money -= BreachChargePrice.IntValue;
 					CWeapon bcwep = GivePlayerWeapon(p, "weapon_breachcharge");
 					bcwep.Ammo = 1;
-					PrintToChat(client, PREFIX ... "You bought a \x07Breach Charge \x01for \x06$%d\x01!", BreachChargePrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Breach Charge \x01for \x06$%d\x01!", BreachChargePrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "ha10")){
@@ -720,10 +723,10 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					//set hand and player model
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
-					PrintToChat(client, PREFIX ... "You bought \x0B10 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor10Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B10 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor10Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ha15")){
@@ -738,10 +741,10 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
-					PrintToChat(client, PREFIX ... "You bought \x0B15 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor15Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B15 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor15Price.IntValue);
 				}
 					else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ha20")){
@@ -756,10 +759,10 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
-					PrintToChat(client, PREFIX ... "You bought \x0B20 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor20Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B20 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor20Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ha25")){
@@ -774,10 +777,10 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
-					PrintToChat(client, PREFIX ... "You bought \x0B25 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor25Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B25 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor25Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ha100")){
@@ -792,26 +795,26 @@ public int Menu_HeavyArmor(Menu menu, MenuAction action, int client, int itemNum
 					p.HeavyArmor = true;
 					p.SetModel(sModel);
 					p.SetPropString(Prop_Send, "m_szArmsModel", sHand);
-					PrintToChat(client, PREFIX ... "You bought \x0B100 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor100Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B100 Heavy Armor \x01for \x06$%d\x01!", HeavyArmor100Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "ba10")){
@@ -820,10 +823,10 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 10;
 					p.Helmet = false;
 					p.HeavyArmor = false;
-					PrintToChat(client, PREFIX ... "You bought \x0B10 Body Armor \x01for \x06$%d\x01!", BodyArmor10Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B10 Body Armor \x01for \x06$%d\x01!", BodyArmor10Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ba15")){
@@ -832,10 +835,10 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 15;
 					p.Helmet = false;
 					p.HeavyArmor = false;
-					PrintToChat(client, PREFIX ... "You bought \x0B15 Body Armor \x01for \x06$%d\x01!", BodyArmor15Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B15 Body Armor \x01for \x06$%d\x01!", BodyArmor15Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ba20")){
@@ -844,10 +847,10 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 20;
 					p.Helmet = false;
 					p.HeavyArmor = false;
-					PrintToChat(client, PREFIX ... "You bought \x0B20 Body Armor \x01for \x06$%d\x01!", BodyArmor20Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B20 Body Armor \x01for \x06$%d\x01!", BodyArmor20Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "ba25")){
@@ -856,26 +859,26 @@ public int Menu_BodyArmor(Menu menu, MenuAction action, int client, int itemNum)
 					p.Armor += 25;
 					p.Helmet = false;
 					p.HeavyArmor = false;
-					PrintToChat(client, PREFIX ... "You bought \x0B25 Body Armor \x01for \x06$%d\x01!", BodyArmor25Price.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x0B25 Body Armor \x01for \x06$%d\x01!", BodyArmor25Price.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if(p.GetWeapon(CS_SLOT_SECONDARY).IsNull){
@@ -885,10 +888,10 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon gkwep = GivePlayerWeapon(p, "weapon_glock");
 						gkwep.Ammo = GlockAmmo.IntValue;
 						gkwep.ReserveAmmo = GlockReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07Glock \x01for \x06$%d\x01!", GlockPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Glock \x01for \x06$%d\x01!", GlockPrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_usp")){
@@ -897,10 +900,10 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon uspwep = GivePlayerWeapon(p, "weapon_usp_silencer");
 						uspwep.Ammo = USPAmmo.IntValue;
 						uspwep.ReserveAmmo = USPReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07USP \x01for \x06$%d\x01!", USPPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07USP \x01for \x06$%d\x01!", USPPrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_cz75a")){
@@ -909,10 +912,10 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon czwep = GivePlayerWeapon(p, "weapon_cz75a");
 						czwep.Ammo = CZ75Ammo.IntValue;
 						czwep.ReserveAmmo = CZ75ReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07CZ75A \x01for \x06$%d\x01!", CZ75Price.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07CZ75A \x01for \x06$%d\x01!", CZ75Price.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_deagle")){
@@ -921,10 +924,10 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon dgwep = GivePlayerWeapon(p, "weapon_deagle");
 						dgwep.Ammo = DeagleAmmo.IntValue;
 						dgwep.ReserveAmmo = DeagleReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07Deagle \x01for \x06$%d\x01!", DeaglePrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Deagle \x01for \x06$%d\x01!", DeaglePrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_revolver")){
@@ -933,31 +936,31 @@ public int Menu_Pistols(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon r8wep = GivePlayerWeapon(p, "weapon_revolver");
 						r8wep.Ammo = BumpyAmmo.IntValue;
 						r8wep.ReserveAmmo = BumpyReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07Revolver \x01for \x06$%d\x01!", BumpyPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Revolver \x01for \x06$%d\x01!", BumpyPrice.IntValue);
 						PrintToConsole(client, "bumpy bumpy");
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 			}
 			else{
-				PrintToChat(client, PREFIX ... "You already have a \x07secondary\x01!");
+				PrintToChat(client, XG_PREFIX_CHAT_WARN ... "You already have a \x07secondary\x01!");
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if(p.GetWeapon(CS_SLOT_PRIMARY).IsNull){
@@ -967,10 +970,10 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon ppwep = GivePlayerWeapon(p, "weapon_bizon");
 						ppwep.Ammo = BizonAmmo.IntValue;
 						ppwep.ReserveAmmo = BizonReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07Bizon \x01for \x06$%d\x01!", BizonPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Bizon \x01for \x06$%d\x01!", BizonPrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_mp9")){
@@ -979,10 +982,10 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon mp9wep = GivePlayerWeapon(p, "weapon_mp9");
 						mp9wep.Ammo = MP9Ammo.IntValue;
 						mp9wep.ReserveAmmo = MP9ReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07MP9 \x01for \x06$%d\x01!", MP9Price.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07MP9 \x01for \x06$%d\x01!", MP9Price.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_negev")){
@@ -991,10 +994,10 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon negevwep = GivePlayerWeapon(p, "weapon_negev");
 						negevwep.Ammo = NegevAmmo.IntValue;
 						negevwep.ReserveAmmo = NegevReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07Negev \x01for \x06$%d\x01!", NegevPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Negev \x01for \x06$%d\x01!", NegevPrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 
@@ -1004,10 +1007,10 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon famaswep = GivePlayerWeapon(p, "weapon_famas");
 						famaswep.Ammo = FamasAmmo.IntValue;
 						famaswep.ReserveAmmo = FamasReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07Famas \x01for \x06$%d\x01!", FamasPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Famas \x01for \x06$%d\x01!", FamasPrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 				else if (StrEqual(info, "weapon_ssg08")){
@@ -1016,68 +1019,68 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int itemNum){
 						CWeapon scoutwep = GivePlayerWeapon(p, "weapon_ssg08");
 						scoutwep.Ammo = ScoutAmmo.IntValue;
 						scoutwep.ReserveAmmo = ScoutReserveAmmo.IntValue;
-						PrintToChat(client, PREFIX ... "You bought a \x07SSG08 \x01for \x06$%d\x01!", ScoutPrice.IntValue);
+						PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07SSG08 \x01for \x06$%d\x01!", ScoutPrice.IntValue);
 					}
 					else{
-						PrintToChat(client, PREFIX ... NOMONEY);
+						PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 					}
 				}
 			}
 			else{
-					PrintToChat(client, PREFIX ... "You already have a \x07primary\x01!");
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... "You already have a \x07primary\x01!");
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
 
 public int Menu_Miscellaneous(Menu menu, MenuAction action, int client, int itemNum){
 	CCSPlayer p = CCSPlayer(client);
-	if(p.Alive){
-		if (action == MenuAction_Select){
+	if (action == MenuAction_Select){
+		if(p.Alive){
 			char info[32], display[64];
 			menu.GetItem(itemNum, info, sizeof(info), _, display, sizeof(display));
 			if (StrEqual(info, "exoboots")){
 				if(p.Money >= ExoBootsPrice.IntValue){
 					p.Money -= ExoBootsPrice.IntValue;
 					SetEntProp(client, Prop_Send, "m_passiveItems", 1, 1, 1);
-					PrintToChat(client, PREFIX ... "You bought \x07 ExoBoots \x01for \x06$%d\x01!", ExoBootsPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought \x07 ExoBoots \x01for \x06$%d\x01!", ExoBootsPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "bumpmine")){
 				if(p.Money >= BumpMinePrice.IntValue){
 					p.Money -= BumpMinePrice.IntValue;
 					GivePlayerWeapon(p, "weapon_bumpmine");
-					PrintToChat(client, PREFIX ... "You bought 3 \x07Bump Mines \x01for \x06$%d\x01!", BumpMinePrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought 3 \x07Bump Mines \x01for \x06$%d\x01!", BumpMinePrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 			else if (StrEqual(info, "shield")){
 				if(p.Money >= ShieldPrice.IntValue){
 					p.Money -= ShieldPrice.IntValue;
 					GivePlayerWeapon(p, "weapon_shield");
-					PrintToChat(client, PREFIX ... "You bought a \x07Riot Shield \x01for \x06$%d\x01!", ShieldPrice.IntValue);
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Riot Shield \x01for \x06$%d\x01!", ShieldPrice.IntValue);
 				}
 				else{
-					PrintToChat(client, PREFIX ... NOMONEY);
+					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
 				}
 			}
 		}
-		else if (action == MenuAction_End){
-			delete menu;
+		else{
+			PrintToChat(client, XG_PREFIX_CHAT_WARN...ALIVE);
 		}
 	}
-	else{
-		PrintToChat(client, PREFIX...ALIVE);
+	else if (action == MenuAction_End){
+		delete menu;
 	}
 }
