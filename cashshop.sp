@@ -136,6 +136,8 @@ ConVar DeagleAmmo;
 ConVar DeagleReserveAmmo;
 ConVar BumpyAmmo;
 ConVar BumpyReserveAmmo;
+//Nades
+ConVar BumpyMineAmmo;
 
 public void OnPluginStart(){
 	
@@ -253,6 +255,8 @@ public void OnPluginStart(){
 	NegevReserveAmmo = CreateConVar("sm_cashshop_ammo_reserve_negev", "30", "Ammo In Negev Reserve", _, true, 0.0, true, 300.0);
 	FamasReserveAmmo = CreateConVar("sm_cashshop_ammo_reserve_famas", "15", "Ammo In Famas Reserve", _, true, 0.0, true, 90.0);
 	ScoutReserveAmmo = CreateConVar("sm_cashshop_ammo_reserve_scout", "5", "Ammo In Scout Reserve", _, true, 0.0, true, 90.0);
+	//Nades
+	BumpyMineAmmo = CreateConVar("sm_cashshop_ammo_bumpmines", "1", "Amount of bumpmines", _, true, 0.0, true, 3.0);
 	
 	AutoExecConfig(true, "plugin.cashshop-jb");
 }
@@ -1059,8 +1063,8 @@ public int Menu_Miscellaneous(Menu menu, MenuAction action, int client, int item
 				if(p.Money >= BumpMinePrice.IntValue){
 					p.Money -= BumpMinePrice.IntValue;
 					CWeapon bumpwep = GivePlayerWeapon(p, "weapon_bumpmine");
-					bcwep.Ammo = 1;
-					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Bump Mine \x01for \x06$%d\x01!", BumpMinePrice.IntValue);
+					bumpwep.Ammo = BumpyMineAmmo.IntValue;
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought %d \x07Bump Mine \x01for \x06$%d\x01!", BumpyMineAmmo.IntValue, BumpMinePrice.IntValue);
 				}
 				else{
 					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
