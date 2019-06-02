@@ -156,10 +156,10 @@ public void OnPluginStart(){
 	BreachChargePrice = CreateConVar("sm_cashshop_price_breachcharge", "12000", "Price of Breach Charge");
 	//Primaries
 	BizonPrice = CreateConVar("sm_cashshop_price_bizon", "35000", "Price of PP Bizon");
-	MP9Price = CreateConVar("sm_cashshop_price_mp9", "35000", "Price of PP Bizon");
-	NegevPrice = CreateConVar("sm_cashshop_price_negev", "40000", "Price of PP Bizon");
-	FamasPrice = CreateConVar("sm_cashshop_price_famas", "42000", "Price of PP Bizon");
-	ScoutPrice = CreateConVar("sm_cashshop_price_scout", "45000", "Price of PP Bizon");
+	MP9Price = CreateConVar("sm_cashshop_price_mp9", "35000", "Price of MP9");
+	NegevPrice = CreateConVar("sm_cashshop_price_negev", "40000", "Price of Negev");
+	FamasPrice = CreateConVar("sm_cashshop_price_famas", "42000", "Price of Famas");
+	ScoutPrice = CreateConVar("sm_cashshop_price_scout", "45000", "Price of Scout");
 	//Pistols
 	GlockPrice = CreateConVar("sm_cashshop_price_glock", "16000", "Price of Glock");
 	USPPrice = CreateConVar("sm_cashshop_price_usp", "18000", "Price of USP");
@@ -1058,8 +1058,9 @@ public int Menu_Miscellaneous(Menu menu, MenuAction action, int client, int item
 			else if (StrEqual(info, "bumpmine")){
 				if(p.Money >= BumpMinePrice.IntValue){
 					p.Money -= BumpMinePrice.IntValue;
-					GivePlayerWeapon(p, "weapon_bumpmine");
-					PrintToChat(client, XG_PREFIX_CHAT ... "You bought 3 \x07Bump Mines \x01for \x06$%d\x01!", BumpMinePrice.IntValue);
+					CWeapon bumpwep = GivePlayerWeapon(p, "weapon_bumpmine");
+					bcwep.Ammo = 1;
+					PrintToChat(client, XG_PREFIX_CHAT ... "You bought a \x07Bump Mine \x01for \x06$%d\x01!", BumpMinePrice.IntValue);
 				}
 				else{
 					PrintToChat(client, XG_PREFIX_CHAT_WARN ... NOMONEY);
